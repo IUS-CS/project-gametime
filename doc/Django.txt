@@ -1,0 +1,24 @@
+
+
+
+
+Start up:
+install Django by doing:
+python -m pip install Django
+
+
+nstall Django rest framwork:
+python -m pip install djangorestframework
+
+
+make sure that Django is installed:
+python -m django --version
+
+
+
+to start a project and set defult config:
+django-admin startproject config
+
+to make the app:
+
+python manage.py startapp myapp
