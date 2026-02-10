@@ -1,0 +1,35 @@
+
+
+
+
+Start up:
+install Django by doing:
+python -m pip install Django
+
+
+nstall Django rest framwork:
+python -m pip install djangorestframework
+
+
+make sure that Django is installed:
+python -m django --version
+
+
+
+to start a project and set defult config:
+django-admin startproject config
+
+to make the app:
+
+python manage.py startapp myapp
+
+in the restapi directory(our project) run the backend by:
+python manage.py runserver
+
+
+
+basics of the backend:
+the backend technically starts in the restapi dir. the second restapi is for configurating the entire project
+the gametime dir is where that routes (urls) of the project start.
+urls python files are where the routes are established and the url file in gametime is where we connect
+our actions with the server itself.

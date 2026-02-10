@@ -1,4 +1,4 @@
-reated by https://www.toptal.com/developers/gitignore/api/windows,linux,macos,vs,pycharm,intellij,python,react,django
+reated by https://www.toptal.com/developers/gitignore/api/windows,linux,macos,vs,pycharm,intellij,python,react,djang
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos,vs,pycharm,intellij,python,react,django
 
 ### Django ###
@@ -139,6 +139,12 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+
+myenv/
+venv/
+.env/
+
 
 # Spyder project settings
 .spyderproject
