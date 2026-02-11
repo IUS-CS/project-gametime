@@ -1,0 +1,14 @@
+.page {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button {
+    font-size: 18px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
