@@ -6,4 +6,5 @@ from rest_framework.response import Response
 
 @api_view(['GET'])
 def healthCheck(request):
-    return Response('okay', status=200)
+    print("here")
+    return Response({"message":"The backend is connected to the button"}, status=200)

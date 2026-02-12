@@ -31,5 +31,9 @@ python manage.py runserver
 basics of the backend:
 the backend technically starts in the restapi dir. the second restapi is for configurating the entire project
 the gametime dir is where that routes (urls) of the project start.
+
+
+cors:
+python -m pip install django-cors-headers
 urls python files are where the routes are established and the url file in gametime is where we connect
 our actions with the server itself.
