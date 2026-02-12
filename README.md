@@ -24,6 +24,19 @@ http://localhost:8000/gametime/health
 ```
 
 
+## setting up dependencies 
+If you want to contribute then run this in the backend directory:
+```
+pip install --no-cache-dir -r requirements.txt
+```
+
+And this in the frontend directory:
+
+```
+npm install
+```
+
+
 
 
  
