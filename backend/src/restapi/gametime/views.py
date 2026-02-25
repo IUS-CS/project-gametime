@@ -7,6 +7,7 @@ from .auth import get_access_token, get_client_id, authenticate
 clientID = get_client_id()
 url = 'https://api.igdb.com/v4/games'
 
+gamefilter = [18, 19, 4, 21, 5, 41, 130, 33, 22, 24, 20, 37, 7, 8, 9, 48, 167, 38, 46, 11, 12, 49, 169]
 
 @api_view(['GET'])
 def healthCheck(request):
@@ -21,7 +22,7 @@ def searchGames(request, query):
             "Client-ID": f"{clientID}",
             "Authorization": f"Bearer {access_token}"
         }
-        data = data = f'search "{query}"; fields name, summary;'
+        data = f'search "{query}"; fields name, summary, cover.image_id; where game_type = (0,8) & platforms = ({','.join(map(str, gamefilter))}) & version_parent = null ;'
         response = requests.post(url, headers=headers, data=data)
         if response.status_code == 401:
             access_token = authenticate()

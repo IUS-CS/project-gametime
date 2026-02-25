@@ -1,4 +1,7 @@
 # project-gametime
+This website gives anyone a space to give their opinions on video games that they have played and share it for everyone to see.
+
+The core purpose of the platform is to build a community of passionate users that get together and discuss the games they are interested in.
 
 ## Getting Started:
 
@@ -20,7 +23,7 @@ http://localhost:5173/
 
 The backend is exposed on:
 ```
-http://localhost:8000/gametime/health
+http://localhost:8000/gametime/games
 ```
 
 
