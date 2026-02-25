@@ -3,14 +3,14 @@
 Roles and responsibilities of each member.
 
 - Andon Payton:
-    - tbd
+    - frontend
 
 - Cameron Stevens:
-    - tbd
+    - backend/database
 
 - Jacob Ernst:
-    - tbd
+    - frontend/backend
 
 - Michael Verdouw:
-    - tbd
+    - backend/database
     

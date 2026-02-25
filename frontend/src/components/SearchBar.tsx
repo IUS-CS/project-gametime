@@ -52,6 +52,7 @@ function QuerySearch() {
                     {searchResults.map((result) => (
                         <div key={result.id} className={styles.resultItem}>
                             <strong className={styles.resultTitle}>{result.name}</strong>
+                            <img src= {`https://images.igdb.com/igdb/image/upload/t_720p/${result.cover?.image_id}.jpg`} width="120" alt={result.name} className={styles.resultImage} />
                             {result.summary && <p className={styles.resultSummary}>{result.summary}</p>}
                         </div>
                     ))}
