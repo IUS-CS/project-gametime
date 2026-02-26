@@ -1,0 +1,85 @@
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+
+    height: 64px;
+    padding: 0 16px;
+
+    display: grid;
+    grid-template-columns: 180px 1fr 320px;
+    align-items: center;
+    gap: 12px;
+
+    background: #0f1115;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.left {
+    display: flex;
+    align-items: center;
+}
+
+.brand {
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: #fff;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.linkButton {
+    background: transparent;
+    border: 1px solid transparent;
+    color: #d6d6d6;
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.linkButton:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.primaryButton {
+    background: #ffffff;
+    color: #0f1115;
+    border: 1px solid #ffffff;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.primaryButton:hover {
+    opacity: 0.92;
+}
+
+.iconButton {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+
+    color: #fff;
+    cursor: pointer;
+}
+
+.iconButton:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+}
