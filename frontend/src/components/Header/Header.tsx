@@ -1,5 +1,6 @@
 import styles from "./Header.module.css";
 import { QuerySearch } from "../SearchBar/SearchBar";
+import { useNavigate } from "react-router-dom";
 
 type HeaderProps = {
     onSignIn?: () => void;
@@ -7,8 +8,11 @@ type HeaderProps = {
     onAccount?: () => void;
 };
 
+ 
+
 export default function Header(props: HeaderProps) {
     const { onSignIn, onCreateAccount, onAccount } = props;
+    const navigate = useNavigate();
 
     return (
         <header className={styles.header}>
@@ -17,7 +21,9 @@ export default function Header(props: HeaderProps) {
             </div>
 
             <div className={styles.center}>
-                <QuerySearch />
+                <QuerySearch 
+                onSearch={(q:string) => navigate(`/search?q=${encodeURIComponent(q)}`)}        
+                />
             </div>
 
             <div className={styles.right}>

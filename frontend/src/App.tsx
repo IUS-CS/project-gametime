@@ -5,6 +5,7 @@ import CreateAccount from "./pages/CreateAccount/CreateAccount";
 import SignIn from "./pages/SignIn/SignIn";
 
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import SearchPage from "./pages/SearchPage/searchPage";
 
 //allows navigation
 function AppContent() {
@@ -12,17 +13,18 @@ function AppContent() {
 
     return (
         <>
-            //header points the pages
+            
             <Header
                 onSignIn={() => navigate("/sign-in")}
                 onCreateAccount={() => navigate("/create-account")}
                 onAccount={() => console.log("Account")}
             />
-            //routes the buttons take
+            
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/create-account" element={<CreateAccount />}/>
                 <Route path="/sign-in" element={<SignIn />} />
+                <Route path="/search" element={<SearchPage />} />
             </Routes>
         </>
     );
