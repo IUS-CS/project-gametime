@@ -1,5 +1,14 @@
 from django.db import models
 
+
+# User Reviews
+class Reviews(models.Model):
+     gameID = models.IntegerField()
+     userID = models.IntegerField()
+     rating = models.IngegerField()
+     message = models.CharField(max_length=2500)
+     time = models.IntegerField()
+        
 # Users table
 class Users(models.Model):
     username = models.CharField(max_length=100)
