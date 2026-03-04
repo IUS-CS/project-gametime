@@ -17,7 +17,7 @@ export default function Header(props: HeaderProps) {
     return (
         <header className={styles.header}>
             <div className={styles.left}>
-                <div className={styles.brand}>GameTime</div>
+                <div className={styles.brand} onClick={() => navigate("/")}>GameTime</div>
             </div>
 
             <div className={styles.center}>

@@ -5,7 +5,7 @@ from django.db import models
 class Reviews(models.Model):
      gameID = models.IntegerField()
      userID = models.IntegerField()
-     rating = models.IngegerField()
+     rating = models.IntegerField()
      message = models.CharField(max_length=2500)
      time = models.IntegerField()
         

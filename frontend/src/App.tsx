@@ -6,6 +6,7 @@ import SignIn from "./pages/SignIn/SignIn";
 
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import SearchPage from "./pages/SearchPage/searchPage";
+import GamePage from "./pages/gamePage/gamePage";
 
 //allows navigation
 function AppContent() {
@@ -25,6 +26,7 @@ function AppContent() {
                 <Route path="/create-account" element={<CreateAccount />}/>
                 <Route path="/sign-in" element={<SignIn />} />
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/game/:id" element={<GamePage />} />
             </Routes>
         </>
     );
