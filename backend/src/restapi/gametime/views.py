@@ -37,8 +37,8 @@ def igdbPost(query: str):
 def searchGames(request, query):
     try:
         data = (f'search "{query}"; fields name, summary, '
-                f'cover.image_id; where game_type = (0,8) & '
-                f'platforms = ({','.join(map(str, gamefilter))}) & version_parent = null;')
+                f'cover.image_id; where game_type = (0,8,9,11) & '
+                f'platforms = ({','.join(map(str, gamefilter))}) & version_parent = null & first_release_date != null; limit 25;')
 
         response = igdbPost(data)
         return Response(response.json(), status=response.status_code)
