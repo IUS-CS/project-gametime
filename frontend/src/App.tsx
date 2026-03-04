@@ -3,6 +3,7 @@ import Header from "./components/Header/Header";
 import Home from "./pages/Home/Home";
 import CreateAccount from "./pages/CreateAccount/CreateAccount";
 import SignIn from "./pages/SignIn/SignIn";
+import Account from "./pages/Account/Account";
 
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
@@ -10,19 +11,23 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 function AppContent() {
     const navigate = useNavigate();
 
+    // @ts-ignore
+    // @ts-ignore
+    // @ts-ignore
     return (
         <>
-            //header points the pages
+
             <Header
                 onSignIn={() => navigate("/sign-in")}
                 onCreateAccount={() => navigate("/create-account")}
-                onAccount={() => console.log("Account")}
+                onAccount={() => navigate("/account")}
             />
-            //routes the buttons take
+
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/create-account" element={<CreateAccount />}/>
                 <Route path="/sign-in" element={<SignIn />} />
+                <Route path="/account" element={<Account />} />
             </Routes>
         </>
     );

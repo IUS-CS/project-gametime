@@ -25,6 +25,11 @@
     gap: 12px;
 }
 
+.label {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+}
+
 .input {
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.10);
@@ -33,21 +38,4 @@
     color: white;
 }
 
-.input::placeholder {
-    color: rgba(255,255,255,0.5);
-}
 
-.button {
-    margin-top: 10px;
-    background: #1f6feb;
-    border: none;
-    padding: 10px;
-    border-radius: 10px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.button:hover {
-    background: #388bfd;
-}
