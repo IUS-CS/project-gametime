@@ -8,8 +8,11 @@ type HeaderProps = {
     onAccount?: () => void;
 };
 
+ 
+
 export default function Header(props: HeaderProps) {
     const { onSignIn, onCreateAccount, onAccount } = props;
+    const navigate = useNavigate();
 
     const navigate = useNavigate();   // ← add this
 
@@ -24,7 +27,9 @@ export default function Header(props: HeaderProps) {
             </div>
 
             <div className={styles.center}>
-                <QuerySearch />
+                <QuerySearch 
+                onSearch={(q:string) => navigate(`/search?q=${encodeURIComponent(q)}`)}        
+                />
             </div>
 
             <div className={styles.right}>

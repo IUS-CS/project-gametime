@@ -6,6 +6,7 @@ import SignIn from "./pages/SignIn/SignIn";
 import Account from "./pages/Account/Account";
 
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import SearchPage from "./pages/SearchPage/searchPage";
 
 //allows navigation
 function AppContent() {
@@ -16,18 +17,18 @@ function AppContent() {
     // @ts-ignore
     return (
         <>
-
+            
             <Header
                 onSignIn={() => navigate("/sign-in")}
                 onCreateAccount={() => navigate("/create-account")}
                 onAccount={() => navigate("/account")}
             />
-
+            
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/create-account" element={<CreateAccount />}/>
                 <Route path="/sign-in" element={<SignIn />} />
-                <Route path="/account" element={<Account />} />
+                <Route path="/search" element={<SearchPage />} />
             </Routes>
         </>
     );
