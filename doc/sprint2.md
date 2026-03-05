@@ -21,15 +21,15 @@ This sprint, we completed:
 
 Screenshot of our Database schema in models.py:
 
-![gametimeDBSchema.png](C:\Users\camst\OneDrive\Pictures\Screenshots\gametimeDBSchema.png)
+![gametimeDBSchema.png](images/gametimeDBSchema.png)
 
 Screenshots of our webpage so far:
 
-![gametimewbp1.png](C:\Users\camst\OneDrive\Pictures\Screenshots\gametimewbp1.png)
+![gametimewbp1.png](images/gametimewbp1.png)
 
-![gametimewbp2.png](C:\Users\camst\OneDrive\Pictures\Screenshots\gametimewbp2.png)
+![gametimewbp2.png](images/gametimewbp2.png)
 
-![gametimewbp3.png](C:\Users\camst\OneDrive\Pictures\Screenshots\gametimewebp3.png)
+![gametimewbp3.png](images/gametimewebp3.png)
 
 ## Retro
 
