@@ -1,5 +1,5 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import type { searchResult } from "../../types/types";
+import type { gameObject } from "../../types/types";
 import { useEffect, useState } from "react";
 import styles from "./gamePage.module.css";
 
@@ -7,7 +7,7 @@ import styles from "./gamePage.module.css";
 
 function GamePage() {
 
-    const [results, setResults] = useState<searchResult | null>(null);
+    const [game, setGame] = useState<gameObject | null>(null);
 
     const { id } = useParams<{ id: string }>();
 
@@ -17,7 +17,7 @@ function GamePage() {
         fetch(`http://127.0.0.1:8000/gametime/game/${id}/`)
             .then((res) => res.json())
             .then((data) => {
-                setResults(data[0] ?? null);
+                setGame(data[0] ?? null);
             })
             .catch((err) => console.error("Game page error:", err));
     }, [id]);
@@ -25,17 +25,24 @@ function GamePage() {
     return (
         <div className={styles.hero}>
             <div className={styles.cover}>
-                {results?.cover?.image_id && (
+                {game?.cover?.image_id && (
                     <img
-                        src={`https://images.igdb.com/igdb/image/upload/t_720p/${results.cover.image_id}.jpg`}
-                        alt={results.name}
+                        src={`https://images.igdb.com/igdb/image/upload/t_720p/${game.cover.image_id}.jpg`}
+                        alt={game.name}
                     
                     />
                 )}
             </div>
             <div className={styles.info}>
-            <h1>{results?.name}</h1>
-            <p className={styles.summary}>{results?.summary}</p>
+            <h1>{game?.name}</h1>
+            <p className={styles.summary}>{game?.summary}</p>
+            </div>
+            <div>
+                <h2>{game?.first_release_date}</h2>
+                <h2>Rating: {game?.total_rating ? Math.round(game.total_rating) : "N/A"}</h2>
+                <h2>Companies: {game?.involved_companies?.map(c => c.company.name).join(", ") || "N/A"}</h2>
+                <h2>Age Rating: {game?.age_ratings?.[0] ? `${game.age_ratings[0].organization} ${game.age_ratings[0].rating_category}` : "N/A"}</h2>
+
             </div>
         </div>
     );

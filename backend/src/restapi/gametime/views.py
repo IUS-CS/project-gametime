@@ -38,7 +38,8 @@ def searchGames(request, query):
     try:
         data = (f'search "{query}"; fields name, summary, '
                 f'cover.image_id; where game_type = (0,8,9,11) & '
-                f'platforms = ({','.join(map(str, gamefilter))}) & version_parent = null & first_release_date != null; limit 25;')
+                f'platforms = ({','.join(map(str, gamefilter))}) '
+                f'& version_parent = null & first_release_date != null; limit 25;')
 
         response = igdbPost(data)
         return Response(response.json(), status=response.status_code)
@@ -51,7 +52,9 @@ def searchGames(request, query):
 @api_view(['GET'])
 def getAGame(request, id):
     try:
-        data = (f' fields name, summary, cover.image_id; '
+        data = (f' fields name, summary, cover.image_id, total_rating, '
+                f'first_release_date, involved_companies.company.name, '
+                f'age_ratings.organization, age_ratings.rating_category; '
                 f'where id = ({id}) & version_parent = null ;')
         response = igdbPost(data)
         return Response(response.json(), status=response.status_code)
