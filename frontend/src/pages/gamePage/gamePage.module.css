@@ -10,8 +10,7 @@
     color: #e6edf3;
 
 
-    align-items: center;
-
+   align-items: flex-start;
 }
 
 .cover img {
@@ -28,6 +27,7 @@
 .info h1 {
     font-size: 3rem;
     font-weight: 700;
+    margin-top: 0;
     margin-bottom: 0.5rem;
 }
 
@@ -35,4 +35,9 @@
     line-height: 1.6;
     font-size: 1.05rem;
     color: #cbd5e1;
+}
+
+.records {
+    max-width: 300px;
+   
 }
