@@ -1,7 +1,7 @@
 
 # Sprint Ceremony Minutes
   
-Date: 2026-03-03
+Date: 2026-03-05
 
 Members present:
 
@@ -21,15 +21,15 @@ This sprint, we completed:
 
 Screenshot of our Database schema in models.py:
 
-![Thing]("C:\Users\camst\OneDrive\Pictures\Screenshots\Screenshot 2026-03-04 222900.png")
+![Screenshot 2026-03-04 2229000.png]("C:\Users\camst\OneDrive\Pictures\Screenshots\Screenshot 2026-03-04 222900.png")
 
 Screenshots of our webpage so far:
 
-![Thing]("C:\Users\camst\OneDrive\Pictures\Screenshots\gametimewbp1.png")
+![gametimewbp1.png]("C:\Users\camst\OneDrive\Pictures\Screenshots\gametimewbp1.png")
 
-![Thing]("C:\Users\camst\OneDrive\Pictures\Screenshots\gametimewbp2.png")
+![gametimewbp2.png]("C:\Users\camst\OneDrive\Pictures\Screenshots\gametimewbp2.png")
 
-![Thing]("C:\Users\camst\OneDrive\Pictures\Screenshots\gametimewebp3.png")
+![gametimewbp3.png]("C:\Users\camst\OneDrive\Pictures\Screenshots\gametimewebp3.png")
 
 ## Retro
 
@@ -46,7 +46,8 @@ Screenshots of our webpage so far:
 
 ### Actionable Commitments
 
-As a team, we will continue to keep working within our realms, and try to get as much work done as we can.
+* As a team, we will continue to keep working within our realms, and try to get as much work done as we can.
+* As a team, we will push to make communication a top priority.
 
 ## Next Sprint Planning
 
