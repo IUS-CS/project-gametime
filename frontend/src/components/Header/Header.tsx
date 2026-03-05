@@ -14,10 +14,16 @@ export default function Header(props: HeaderProps) {
     const { onSignIn, onCreateAccount, onAccount } = props;
     const navigate = useNavigate();
 
+    const navigate = useNavigate();   // ← add this
+
     return (
         <header className={styles.header}>
-            <div className={styles.left}>
-                <div className={styles.brand}>GameTime</div>
+            <div
+                className={styles.brand}
+                onClick={() => navigate("/")}
+                style={{ cursor: "pointer" }}
+            >
+                GameTime
             </div>
 
             <div className={styles.center}>
