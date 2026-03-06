@@ -6,14 +6,16 @@ type HeaderProps = {
     onSignIn?: () => void;
     onCreateAccount?: () => void;
     onAccount?: () => void;
+    onRecomendations?: () => void;
+    onBacklogAchives?: () => void;
 };
 
  
 
 export default function Header(props: HeaderProps) {
-    const { onSignIn, onCreateAccount, onAccount } = props;
+    const { onSignIn, onCreateAccount, onAccount, onRecomendations, onBacklogAchives } = props;
 
-    const navigate = useNavigate();   // ← add this
+    const navigate = useNavigate();   
 
     return (
         <header className={styles.header}>
@@ -32,6 +34,15 @@ export default function Header(props: HeaderProps) {
             </div>
 
             <div className={styles.right}>
+
+                <button className={styles.linkButton} onClick={onRecomendations}>
+                    Recommendations
+                </button>
+
+                <button className={styles.linkButton} onClick={onBacklogAchives}>
+                    Backlog Archives
+                </button>
+
                 <button className={styles.linkButton} onClick={onSignIn}>
                     Sign In
                 </button>

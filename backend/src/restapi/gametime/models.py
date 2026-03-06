@@ -1,31 +1,56 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
-# User Reviews
-class Reviews(models.Model):
-     gameID = models.IntegerField()
-     userID = models.IntegerField()
-     rating = models.IntegerField()
-     message = models.CharField(max_length=2500)
-     time = models.IntegerField()
-        
 # Users table
-class Users(models.Model):
-    username = models.CharField(max_length=100)
-    userID = models.AutoField(primary_key=True)
-    email = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
+class USER(AbstractUser):
     followers = models.IntegerField()
     start_date = models.IntegerField()
 
-# Backend table
-class Backend(models.Model):
-    userID = models.IntegerField()
-    gameID = models.IntegerField()
-    backendID = models.AutoField(primary_key=True)
 
-# Favorites table
-class Favorites(models.Model):
+# Backend table
+class BACKLOG(models.Model):
     userID = models.IntegerField()
     gameID = models.IntegerField()
-    favoritesID = models.AutoField(primary_key=True)
+
+
+class COMPLETED(models.Model):
+    userID = models.ForeignKey(USER, on_delete=models.CASCADE)
+    gameID = models.IntegerField()
+# Favorites table
+
+
+class FAVORITES(models.Model):
+    userID = models.ForeignKey(USER, on_delete=models.CASCADE)
+    gameID = models.IntegerField()
+# User Reviews
+
+
+class REVIEWS(models.Model):
+    gameID = models.IntegerField()
+    userID = models.ForeignKey(USER, on_delete=models.CASCADE)
+    review = models.TextField()
+    rating = models.FloatField(
+         validators=[MinValueValidator(0.5), MaxValueValidator(5)]
+     )
+
+    date = models.DateTimeField()
+
+
+class FOLLOWUSER(models.Model):
+    followed = models.ForeignKey(USER, on_delete=models.CASCADE, related_name="followed")
+    follower = models.ForeignKey(USER, on_delete=models.CASCADE, related_name="follower")
+
+    class Meta:
+        unique_together = ("followed", "follower")
+
+
+class FOLLOWGAME(models.Model):
+    followerID = models.ForeignKey(USER, on_delete=models.CASCADE)
+    gameID = models.IntegerField()
+
+    class Meta:
+        unique_together = ("followerID", "gameID")
+
+

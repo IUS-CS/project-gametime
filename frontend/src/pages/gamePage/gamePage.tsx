@@ -50,7 +50,7 @@ function GamePage() {
                 <div className={styles.records}>
                     <p>Release Date: {time}</p>
                     <p>Rating: {game?.total_rating ? Math.round(game.total_rating) : "N/A"}</p>
-                    <p>Companies: {game?.involved_companies?.map(c => c.company.name).join(", ") || "N/A"}</p>
+                    <p>Developers: {game?.involved_companies?.map(c => c.company.name).join(", ") || "N/A"}</p>
                     <p>ESRB Rating: </p>
                     {esrb && (
                         <img 
