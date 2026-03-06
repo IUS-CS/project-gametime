@@ -1,0 +1,43 @@
+.hero {
+    display: flex;
+    gap: 3rem;
+    padding: 4rem;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #2b2e33, #1f2227);
+
+    background-size: cover;
+    background-position: center;
+    color: #e6edf3;
+
+
+   align-items: flex-start;
+}
+
+.cover img {
+    width: 300px;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+
+.info {
+    max-width: 440px;
+}
+
+.info h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.summary {
+    line-height: 1.6;
+    font-size: 1.05rem;
+    color: #cbd5e1;
+}
+
+.records {
+    max-width: 300px;
+   
+}

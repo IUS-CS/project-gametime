@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { searchResult } from "../../types/types";
 import {SearchResults} from "../../components/SearchResults/SearchResults";
+import styles from "./searchPage.module.css";
 
 
 
@@ -23,6 +24,10 @@ function SearchPage() {
     }, [query]);
 
 
-     return <SearchResults results={results} />;
+     return (
+        <div className={styles.hero}>
+     <SearchResults results={results} />
+        </div>  
+    );
 }
 export default SearchPage;

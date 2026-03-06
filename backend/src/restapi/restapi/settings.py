@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
+AUTH_USER_MODEL = "gametime.USER"
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
