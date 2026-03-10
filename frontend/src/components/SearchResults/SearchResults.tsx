@@ -1,4 +1,5 @@
 
+import { useNavigate } from "react-router";
 import type { searchResult } from "../../types/types";
 import styles from "./SearchResults.module.css";
 
@@ -6,17 +7,28 @@ type Props = {
     results: searchResult[];
 };
 function SearchResults({ results }: Props) {
+    const navigate = useNavigate();
     if (results.length === 0) {
         return <div className={styles.noResults}>No results found.</div>;
     }
+    
+    function goToGamePage(result: searchResult) {
+        navigate(`/game/${result.id}`);
+        
+
+    }
+        
+
+
 
 
 
 
     return (
         <div className={styles.results}>
+            
             {results.map((result) => (
-                <div key={result.id} className={styles.resultItem}>
+                <div key={result.id} className={styles.resultItem} onClick={() => goToGamePage(result)}>
                     <strong className={styles.title}>{result.name}</strong>
                     {result.cover?.image_id && (
                         <img

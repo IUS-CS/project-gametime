@@ -7,6 +7,9 @@ import Account from "./pages/Account/Account";
 
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import SearchPage from "./pages/SearchPage/searchPage";
+import GamePage from "./pages/gamePage/gamePage";
+import Backlog from "./pages/Backlog/backlog";
+import Recomendations from "./pages/Recomendations/recomendations";
 
 //allows navigation
 function AppContent() {
@@ -22,6 +25,8 @@ function AppContent() {
                 onSignIn={() => navigate("/sign-in")}
                 onCreateAccount={() => navigate("/create-account")}
                 onAccount={() => navigate("/account")}
+                onRecomendations={() => navigate("/recomendations")}
+                onBacklogAchives={() => navigate("/backlog-achives")}
             />
             
             <Routes>
@@ -29,6 +34,10 @@ function AppContent() {
                 <Route path="/create-account" element={<CreateAccount />}/>
                 <Route path="/sign-in" element={<SignIn />} />
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/game/:id" element={<GamePage />} />
+                <Route path="/account" element={<Account />} />
+                <Route path="/recomendations" element={<Recomendations />} />
+                <Route path="/backlog-achives" element={<Backlog />} />
             </Routes>
         </>
     );
