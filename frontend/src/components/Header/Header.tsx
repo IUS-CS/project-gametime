@@ -10,31 +10,30 @@ type HeaderProps = {
     onBacklogAchives?: () => void;
 };
 
- 
+
 
 export default function Header(props: HeaderProps) {
     const { onSignIn, onCreateAccount, onAccount, onRecomendations, onBacklogAchives } = props;
 
-    const navigate = useNavigate();   
+    const navigate = useNavigate();
 
     return (
         <header className={styles.header}>
-            <div
-                className={styles.brand}
-                onClick={() => navigate("/")}
-                style={{ cursor: "pointer" }}
-            >
-                GameTime
-            </div>
+            <div className={styles.left} >
+                <div
+                    className={styles.brand}
+                    onClick={() => navigate("/")}
+                    style={{ cursor: "pointer" }}
+                >
+                    GameTime
+                </div>
+                <button className={styles.primaryButton} onClick={onCreateAccount}>
+                    Create Account
+                </button>
 
-            <div className={styles.center}>
-                <QuerySearch 
-                onSearch={(q:string) => navigate(`/search?q=${encodeURIComponent(q)}`)}        
-                />
-            </div>
-
-            <div className={styles.right}>
-
+                <button className={styles.linkButton} onClick={onSignIn}>
+                    Sign In
+                </button>
                 <button className={styles.linkButton} onClick={onRecomendations}>
                     Recommendations
                 </button>
@@ -43,13 +42,14 @@ export default function Header(props: HeaderProps) {
                     Backlog Archives
                 </button>
 
-                <button className={styles.linkButton} onClick={onSignIn}>
-                    Sign In
-                </button>
+            </div>
 
-                <button className={styles.primaryButton} onClick={onCreateAccount}>
-                    Create Account
-                </button>
+
+
+
+            <div className={styles.right}>
+
+                <QuerySearch onSearch={(q: string) => navigate(`/search?q=${encodeURIComponent(q)}`)} />
 
                 <button
                     className={styles.iconButton}

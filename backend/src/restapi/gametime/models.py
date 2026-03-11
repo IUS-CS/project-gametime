@@ -3,10 +3,10 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
+
 # Users table
 class USER(AbstractUser):
-    followers = models.IntegerField()
-    start_date = models.IntegerField()
+    followers = models.IntegerField(default=0)
 
 
 # Backend table

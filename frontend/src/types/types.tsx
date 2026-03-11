@@ -37,3 +37,16 @@ type AgeRating = {
   organization: number;     
   rating_category: number;  
 }
+
+
+export type userSignIn = {
+  username: string;
+  password: string;
+}
+
+export type userInfo = {
+  username: string;
+  email: string;
+  date_joined: string;
+  followers: number;
+}
