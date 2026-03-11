@@ -6,18 +6,18 @@
     height: 64px;
     padding: 0 16px;
 
-    display: grid;
-    grid-template-columns: 180px 1fr 320px;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
 
     background: #0f1115;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .left {
     display: flex;
     align-items: center;
+    gap: 16px;
+
 }
 
 .brand {
@@ -34,11 +34,9 @@
 }
 
 .right {
-    align-items: center;
-    justify-content: flex-end;
     display: flex;
-    gap: 15px;
-    flex-wrap: nowrap;
+    align-items: center;
+    gap: 12px;
 
 }
 
