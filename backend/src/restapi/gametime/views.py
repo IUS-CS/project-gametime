@@ -1,7 +1,11 @@
 import requests
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from .auth import get_access_token, get_client_id, authenticate
+from django.contrib.auth import authenticate
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from .models import USER
 
 # Create your views here.
 clientID = get_client_id()
@@ -62,3 +66,66 @@ def getAGame(request, id):
         import traceback
         traceback.print_exc()
         return Response({"error": str(e)}, status=500)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getAccountTest(request):
+    if request.method == 'GET':
+        user = request.user
+        data = {
+            'username': user.username,
+            'email': user.email,
+            'date_joined': user.date_joined,
+            'followers': user.followers
+        }
+        print(data)
+
+
+    return Response(data, status=200)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def createAccount(request):
+    if request.method == 'POST':
+        data = request.data
+        user = USER.objects.create_user(
+            username=data['username'],
+            email=data['email'],
+            password=data['password'],
+        )
+        user.save()
+
+        token, created = Token.objects.get_or_create(user=user)
+
+        content = {
+            'user': user.username,
+            'token': token.key
+        }
+        return Response(content)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def signIn(request):
+    if request.method == 'POST':
+        data = request.data
+        user = authenticate(
+            username=data['username'],
+            password=data['password']
+        )
+        if user is None:
+            return Response(
+                {"error": "Invalid username or password"},
+                status=400
+            )
+
+        token, created = Token.objects.get_or_create(user=user)
+
+        content = {
+            'user': user.username,
+            'token': token.key
+        }
+        return Response(content)
+    return Response({'error': 'Invalid credentials'}, status=401)
