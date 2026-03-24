@@ -1,4 +1,6 @@
-Andon Payton
-Cameron Stevens
-Jacob Ernst
-Michael Verdouw
+## Team Members
+
+- Andon Payton
+- Cameron Stevens
+- Jacob Ernst
+- Michael Verdouw
