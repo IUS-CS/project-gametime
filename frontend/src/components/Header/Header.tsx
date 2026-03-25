@@ -8,12 +8,13 @@ type HeaderProps = {
     onAccount?: () => void;
     onRecomendations?: () => void;
     onBacklogAchives?: () => void;
+    onUsers?: () => void;
 };
 
 
 
 export default function Header(props: HeaderProps) {
-    const { onSignIn, onCreateAccount, onAccount, onRecomendations, onBacklogAchives } = props;
+    const { onSignIn, onCreateAccount, onAccount, onRecomendations, onBacklogAchives, onUsers } = props;
 
     const navigate = useNavigate();
 
@@ -34,12 +35,16 @@ export default function Header(props: HeaderProps) {
                 <button className={styles.linkButton} onClick={onSignIn}>
                     Sign In
                 </button>
-                <button className={styles.linkButton} onClick={onRecomendations}>
-                    Recommendations
+                <button className={styles.linkButton} onClick={onBacklogAchives}>
+                    Backlog
                 </button>
 
-                <button className={styles.linkButton} onClick={onBacklogAchives}>
-                    Backlog Archives
+                <button className={styles.linkButton} onClick={onRecomendations}>
+                    Discover
+                </button>
+
+                <button className={styles.linkButton} onClick={onUsers}>
+                    Users
                 </button>
 
             </div>
