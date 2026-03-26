@@ -27,6 +27,7 @@ function AppContent() {
                 onAccount={() => navigate("/account")}
                 onRecomendations={() => navigate("/recomendations")}
                 onBacklogAchives={() => navigate("/backlog-achives")}
+                onUsers={() => navigate("/users")}
             />
             
             <Routes>
