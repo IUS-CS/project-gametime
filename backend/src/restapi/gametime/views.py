@@ -1,3 +1,5 @@
+from urllib import request
+
 import requests
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -224,3 +226,18 @@ def followUser(request):
     return Response({"error: Could not follow user."}, status=400)
 
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def unfollowUser(Request):
+    if request.method == 'DELETE':
+        data = request.data
+        userfollows = FOLLOWUSER.objects.delete(
+            followerID = data['followerID'],
+            gameID = data['gameID'],
+        )
+        userfollows.save()
+        content = {
+            "User has been unfollowed."
+        }
+        return Response(content)
+    return Response({"error: Could not unfollow user."}, status=400)
