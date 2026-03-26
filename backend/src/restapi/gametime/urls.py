@@ -7,5 +7,10 @@ urlpatterns = [
     path('game/<str:id>/', views.getAGame),
     path('user/account/', views.getAccountTest),
     path('sign-in/', views.signIn),
-    path('create-account/', views.createAccount)
+    path('create-account/', views.createAccount),
+    path('users/create-review/', views.createReview),
+    path('user/account/favorites/', views.addFavorite),
+    path('user/account/followed-games/', views.followGame),
+    path('user/account/followed-users/', views.followUser),
+
 ]

@@ -5,7 +5,7 @@ from .auth import get_access_token, get_client_id, authenticate
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from .models import USER
+from .models import USER, REVIEWS, FAVORITES, FOLLOWGAME, FOLLOWUSER
 
 # Create your views here.
 clientID = get_client_id()
@@ -129,3 +129,76 @@ def signIn(request):
         }
         return Response(content)
     return Response({'error': 'Invalid credentials'}, status=401)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createReview(request):
+    if request.method == 'POST':
+        data = request.data
+        review = REVIEWS.objects.create(
+            gameID = data['gameID'],
+            userID = data['userID'],
+            review = data['review'],
+            rating = data['rating'],
+            date = data['date'],
+        )
+        review.save()
+        content = {
+            "Review has been submitted!"
+        }
+        return Response(content)
+    return Response({"error: Could not create review."}, status=400)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def addFavorite(request):
+    if request.method == 'POST':
+        data = request.data
+        favorites = FAVORITES.objects.create(
+            userID = data['userID'],
+            gameID = data['gameID'],
+        )
+        favorites.save()
+        content = {
+            "Favorite has been added!"
+        }
+        return Response(content)
+    return Response({"error: Could not add to favorites."}, status=400)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def followGame(request):
+    if request.method == 'POST':
+        data = request.data
+        gamefollows = FOLLOWGAME.objects.create(
+            followed = data['followed'],
+            follower = data['follower'],
+        )
+        gamefollows.save()
+        content = {
+            "Game has been followed."
+        }
+        return Response(content)
+    return Response({"error: Could not follow user."}, status=400)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def followUser(request):
+    if request.method == 'POST':
+        data = request.data
+        userfollows = FOLLOWUSER.objects.create(
+            followerID = data['followerID'],
+            gameID = data['gameID'],
+        )
+        userfollows.save()
+        content = {
+            "User has been followed."
+        }
+        return Response(content)
+    return Response({"error: Could not follow user."}, status=400)
+
+
