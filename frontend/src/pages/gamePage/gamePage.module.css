@@ -1,16 +1,21 @@
-.hero {
-    display: flex;
-    gap: 3rem;
-    padding: 4rem;
+.page {
     min-height: 100vh;
     background: linear-gradient(to bottom, #2b2e33, #1f2227);
-
-    background-size: cover;
-    background-position: center;
     color: #e6edf3;
+}
 
+.hero {
+    display: grid;
+    grid-template-columns: 320px minmax(420px, 1fr) 430px;
+    gap: 3rem;
+    padding: 4rem;
+    align-items: flex-start;
+}
 
-   align-items: flex-start;
+.cover {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .cover img {
@@ -19,9 +24,13 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
 }
 
+.records {
+    max-width: 300px;
+    line-height: 1.7;
+}
 
 .info {
-    max-width: 440px;
+    max-width: 700px;
 }
 
 .info h1 {
@@ -35,9 +44,173 @@
     line-height: 1.6;
     font-size: 1.05rem;
     color: #cbd5e1;
+    padding-bottom: 1rem;
 }
 
-.records {
-    max-width: 300px;
-   
+.reviewCard {
+    width: 100%;
+    background: rgba(10, 14, 22, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.reviewCard h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.reviewForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.label {
+    font-weight: 600;
+    color: #e6edf3;
+}
+
+.starRow {
+    display: flex;
+    gap: 6px;
+}
+
+.star {
+    cursor: pointer;
+    font-size: 32px;
+    line-height: 1;
+    user-select: none;
+}
+
+.starIcon {
+    color: #5f6773;
+    display: inline-block;
+}
+
+.fullStar {
+    color: #ffd34d;
+}
+
+.halfStar {
+    background: linear-gradient(90deg, #ffd34d 50%, #5f6773 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ratingText {
+    margin: 0;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+}
+
+.textarea {
+    min-height: 180px;
+    resize: vertical;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.04);
+    color: white;
+    padding: 0.9rem;
+    font-size: 1rem;
+    outline: none;
+}
+
+.textarea::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.submitButton {
+    background: #1f6feb;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.submitButton:hover {
+    background: #388bfd;
+}
+
+.reviewsMiniBox {
+    margin-top: 2rem;
+    background: rgba(10, 14, 22, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 1rem 1rem 0.75rem 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    max-width: 700px;
+}
+
+.reviewsMiniBox h3 {
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.reviewScrollArea {
+    max-height: 260px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-right: 0.35rem;
+}
+
+.reviewItem {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 0.85rem;
+}
+
+.reviewHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+}
+
+.reviewUsername {
+    font-weight: 700;
+    color: white;
+}
+
+.reviewDate {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+}
+
+.reviewRatingRow {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+}
+
+.displayStarRow {
+    display: flex;
+    gap: 2px;
+    font-size: 1rem;
+}
+
+.reviewNumericRating {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
+
+.reviewText {
+    margin: 0;
+    line-height: 1.45;
+    color: #e6edf3;
+    font-size: 0.95rem;
+}
+
+.noReviews {
+    color: #cbd5e1;
+    margin: 0;
 }
