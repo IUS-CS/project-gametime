@@ -1,3 +1,5 @@
+from urllib import request
+
 import requests
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -173,6 +175,27 @@ def createReview(request):
     return Response({"error: Could not create review."}, status=400)
 
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteReview(request):
+    if request.method == 'DELETE':
+        data = request.data
+        review = REVIEWS.objects.get(
+            gameID = data['gameID'],
+            userID = data['userID'],
+            review = data['review'],
+            rating = data['rating'],
+            date = data['date'],
+        )
+        review.delete()
+        review.save()
+        content = {
+            "Review has been deleted!"
+        }
+        return Response(content)
+    return Response({"error: Could not delete review."}, status=400)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def addFavorite(request):
@@ -188,6 +211,24 @@ def addFavorite(request):
         }
         return Response(content)
     return Response({"error: Could not add to favorites."}, status=400)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def removeFavorite(request):
+    if request.method == 'DELETE':
+        data = request.data
+        favorites = FAVORITES.objects.get(
+            userID = data['userID'],
+            gameID = data['gameID'],
+        )
+        favorites.delete()
+        favorites.save()
+        content = {
+            "Favorite has been removed."
+        }
+        return Response(content)
+    return Response({"error: Could not remove from favorites."}, status=400)
 
 
 @api_view(['POST'])
@@ -207,6 +248,24 @@ def followGame(request):
     return Response({"error: Could not follow user."}, status=400)
 
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def unfollowGame(request):
+    if request.method == 'DELETE':
+        data = request.data
+        gamefollows = FOLLOWGAME.objects.get(
+        followerID = data['followerID'],
+        gameID = data['gameID'],
+        )
+        gamefollows.delete()
+        gamefollows.save()
+        content = {
+            "Game has been unfollowed."
+        }
+        return Response(content)
+    return Response({"error: Could not unfollow game."})
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def followUser(request):
@@ -224,3 +283,19 @@ def followUser(request):
     return Response({"error: Could not follow user."}, status=400)
 
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def unfollowUser(request):
+    if request.method == 'DELETE':
+        data = request.data
+        userfollows = FOLLOWUSER.objects.get(
+            followerID = data['followerID'],
+            gameID = data['gameID'],
+        )
+        userfollows.delete()
+        userfollows.save()
+        content = {
+            "User has been unfollowed."
+        }
+        return Response(content)
+    return Response({"error: Could not unfollow user."}, status=400)
