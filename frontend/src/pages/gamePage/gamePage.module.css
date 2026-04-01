@@ -2,13 +2,14 @@
     min-height: 100vh;
     background: linear-gradient(to bottom, #2b2e33, #1f2227);
     color: #e6edf3;
+    overflow-x: hidden;
 }
 
 .hero {
     display: grid;
     grid-template-columns: 320px minmax(420px, 1fr) 430px;
-    gap: 3rem;
-    padding: 4rem;
+    gap: 2rem;
+    padding: 2rem;
     align-items: flex-start;
 }
 
@@ -48,7 +49,7 @@
 }
 
 .reviewCard {
-    width: 100%;
+    width: 85%;
     background: rgba(10, 14, 22, 0.92);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 18px;
@@ -64,7 +65,7 @@
 .reviewForm {
     display: flex;
     flex-direction: column;
-    gap: 0.9rem;
+    gap: 0.5rem;
 }
 
 .label {
