@@ -14,6 +14,7 @@ export default function Account() {
       
 
         useEffect( () => {
+    
         async function loadAccount() {
         try{
         

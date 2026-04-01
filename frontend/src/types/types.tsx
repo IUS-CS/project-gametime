@@ -50,3 +50,21 @@ export type userInfo = {
   date_joined: string;
   followers: number;
 }
+
+
+
+
+
+export type getReview = {
+    id: number;
+    username: string;
+    rating: number;
+    review: string;
+    formatedDate: string;
+};
+
+export type postReview = {
+    gameId: number;
+    rating: number;
+    reviewText: string;
+}

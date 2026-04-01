@@ -3,54 +3,79 @@ import type { gameObject } from "../../types/types";
 import { useEffect, useState } from "react";
 import styles from "./gamePage.module.css";
 import { fromUnixTime, format } from "date-fns";
+import type { getReview } from "../../types/types";
+import { useNavigate } from "react-router-dom";
+import Authentication from "../../auth/authentication";
 
-type Review = {
-    id: number;
-    username: string;
-    rating: number;
-    reviewText: string;
-    createdAt: string;
-};
+
+
 
 
 
 function GamePage() {
+    const url = 'http://127.0.0.1:8000/gametime/user/account/';
+    const token = localStorage.getItem("token");
     const [game, setGame] = useState<gameObject | null>(null);
     const [reviewText, setReviewText] = useState("");
     const [selectedRating, setSelectedRating] = useState(0);
+    const [buttonName, setButtonName] = useState("sign in");
+    const navigate = useNavigate();
 
     // placeholder till proper implementation
-    const [reviews] = useState<Review[]>([
-        {
-            id: 1,
-            username: "SampleUser",
-            rating: 4.5,
-            reviewText: "THIS IS A TEST, WILL NEED PROPER BACKEND IMPLMENTATION LATER.",
-            createdAt: "2026-03-30",
-        },
-        {
-            id: 2,
-            username: "Amongus fan",
-            rating: 0.0,
-            reviewText: "NOt Amongus, i hate it.",
-            createdAt: "2026-03-29",
-        },
-    ]);
-
+    const [reviews, setReviews] = useState<getReview[]>([]);
+   
 
 
 
     const { id } = useParams<{ id: string }>();
 
-    useEffect(() => {
-        if (!id) return;
 
-        fetch(`http://127.0.0.1:8000/gametime/game/${id}/`)
+
+     const getReviews = () => {
+        try{
+            fetch(`http://127.0.0.1:8000/gametime/reviews/${id}/`)
             .then((res) => res.json())
             .then((data) => {
-                setGame(data[0] ?? null);
+                setReviews(data);
             })
-            .catch((err) => console.error("Game page error:", err));
+        }    
+        catch (err) {
+            console.error("Error fetching reviews:", err);
+        }
+    };
+
+
+    useEffect(() => {
+        async function fetchingData() {
+            try {
+
+                const res = await Authentication(url, token || "");
+
+                if (res?.status === 401) {
+                    setButtonName("sign in");
+
+                }
+                else {
+                    setButtonName("submit review");
+
+                }
+
+                if (!id) return;
+
+                fetch(`http://127.0.0.1:8000/gametime/game/${id}/`)
+                    .then((res) => res.json())
+                    .then((data) => {
+                        setGame(data[0] ?? null);
+                    })
+                    .catch((err) => console.error("Game page error:", err));
+            }
+            catch (err) {
+                console.error("Game page authentication error:", err);
+                setButtonName("sign in");
+            }
+        }
+        fetchingData();
+        getReviews();
     }, [id]);
 
 
@@ -77,16 +102,55 @@ function GamePage() {
     const handleSubmitReview = (e: React.FormEvent) => {
         e.preventDefault();
 
-        console.log("Review submitted:", {
-            reviewText,
-            selectedRating,
-            gameId: id,
-        });
+        if (buttonName === "sign in") {
+            navigate("/sign-in");
+            return;
+        }
 
         // later connect backend here
 
-        setReviewText("");
-        setSelectedRating(0);
+        if (reviewText.trim() === "" && selectedRating === 0) {
+            console.log("yogi didn't like you")
+            return;
+        }
+        else {
+
+
+           
+            fetch('http://127.0.0.1:8000/gametime/user/create-review/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    {
+                        gameID: id,
+                        rating: selectedRating,
+                        review: reviewText,
+                        username: localStorage.getItem("username") || "Anonymous",
+                        date: new Date().toISOString()
+                    } 
+                ),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error("Network response was not ok: " + res.statusText);
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log("Review submitted successfully:", data);
+                    // Optionally, you can update the reviews state here to show the new review immediately
+                })
+                .catch((err) => {
+                    console.error("Error submitting review:", err);
+                    alert("There was an error submitting your review. Please try again.");
+                });
+
+            setReviewText("");
+            setSelectedRating(0);
+        }
     };
 
 
@@ -123,13 +187,12 @@ function GamePage() {
                     }}
                 >
                     <span
-                        className={`${styles.starIcon} ${
-                            filled
-                                ? styles.fullStar
-                                : half
-                                    ? styles.halfStar
-                                    : ""
-                        }`}
+                        className={`${styles.starIcon} ${filled
+                            ? styles.fullStar
+                            : half
+                                ? styles.halfStar
+                                : ""
+                            }`}
                     >
                         ★
                     </span>
@@ -154,9 +217,8 @@ function GamePage() {
             stars.push(
                 <span
                     key={i}
-                    className={`${styles.starIcon} ${
-                        filled ? styles.fullStar : half ? styles.halfStar : ""
-                    }`}
+                    className={`${styles.starIcon} ${filled ? styles.fullStar : half ? styles.halfStar : ""
+                        }`}
                 >
                     ★
                 </span>
@@ -222,7 +284,7 @@ function GamePage() {
                                                 {review.username}
                                             </span>
                                             <span className={styles.reviewDate}>
-                                                {review.createdAt}
+                                                {review.formatedDate}
                                             </span>
                                         </div>
 
@@ -234,7 +296,7 @@ function GamePage() {
                                         </div>
 
                                         <p className={styles.reviewText}>
-                                            {review.reviewText}
+                                            {review.review}
                                         </p>
                                     </div>
                                 ))}
@@ -270,7 +332,7 @@ function GamePage() {
                         />
 
                         <button type="submit" className={styles.submitButton}>
-                            Submit
+                            {buttonName}
                         </button>
                     </form>
                 </div>

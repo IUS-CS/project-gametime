@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from .models import USER, REVIEWS, FAVORITES, FOLLOWGAME, FOLLOWUSER
+from .serializers import reviewSerializer
 
 # Create your views here.
 # get the client id from the .env file
@@ -84,7 +85,7 @@ def getAGame(request, id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getAccountTest(request):
-    # make sure the request is get
+    # make sure the request is got
     if request.method == 'GET':
         user = request.user         # tell django to get from user table
         data = {                    # data of the user int question
@@ -160,12 +161,13 @@ def signIn(request):
 def createReview(request):
     if request.method == 'POST':
         data = request.data
+        user = USER.objects.get(username=data['username'])
         review = REVIEWS.objects.create(
-            gameID = data['gameID'],
-            userID = data['userID'],
-            review = data['review'],
-            rating = data['rating'],
-            date = data['date'],
+            gameID=data['gameID'],
+            userID=user,
+            review=data['review'],
+            rating=data['rating'],
+            date=data['date'],
         )
         review.save()
         content = {
@@ -175,17 +177,27 @@ def createReview(request):
     return Response({"error: Could not create review."}, status=400)
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def getReviews(request, id):
+    if request.method == 'GET':
+        reviews = REVIEWS.objects.filter(gameID=id)
+        serializer = reviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+    return Response({'error: Could not get reviews'}, status=400)
+
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def deleteReview(request):
     if request.method == 'DELETE':
         data = request.data
         review = REVIEWS.objects.get(
-            gameID = data['gameID'],
-            userID = data['userID'],
-            review = data['review'],
-            rating = data['rating'],
-            date = data['date'],
+            gameID=data['gameID'],
+            userID=data['userID'],
+            review=data['review'],
+            rating=data['rating'],
+            date=data['date'],
         )
         review.delete()
         review.save()
