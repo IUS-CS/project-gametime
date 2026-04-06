@@ -4,17 +4,27 @@
     align-items: center;
     padding-top: 80px;
 
-
-
     min-height: 100vh;
     background: linear-gradient(to bottom, #2b2e33, #1f2227);
-
     background-size: cover;
     background-position: center;
     color: #e6edf3;
 
     align-items: flex-start;
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
+
+/* Main 3 coloum layout: */
+
+.accountLayout {
+    display: grid;
+    grid-template-columns: 360px 360px 360px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+
 
 .card {
     background: #0f1115;
@@ -29,6 +39,7 @@
     margin-bottom: 18px;
     text-align: center;
 }
+
 
 .form {
     display: flex;
@@ -47,4 +58,132 @@
     border-radius: 10px;
     padding: 10px;
     color: white;
+}
+
+/* Account info text block */
+.infoGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.infoGroup p {
+    margin: 0;
+    line-height: 1.5;
+    color: #e6edf3;
+}
+
+
+
+
+/* Shared panel style for favorites and reviews boxes */
+.panel {
+    background: #0f1115;
+    color: white;
+    padding: 22px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.panel h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+/* 4 favorite games grid */
+.favoriteGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+
+
+
+.favoriteItem {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 0.85rem;
+    text-align: center;
+    font-weight: 600;
+    color: #e6edf3;
+}
+
+/* Scrollable review history area */
+.reviewScrollBox {
+    max-height: 360px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-right: 0.35rem;
+}
+
+/* Individual review item */
+.reviewItem {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 0.9rem;
+}
+
+.reviewHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.4rem;
+}
+
+.reviewGameTitle {
+    font-weight: 700;
+    color: white;
+}
+
+.reviewDate {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.reviewRating {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.45rem;
+}
+
+.starDisplay {
+    color: #ffd34d;
+    font-size: 1rem;
+}
+
+.reviewNumeric {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
+
+.reviewText {
+    margin: 0;
+    color: #e6edf3;
+    line-height: 1.45;
+    font-size: 0.95rem;
+}
+
+/* Sign out button */
+.signOutButton {
+    width: 100%;
+    background: #1f6feb;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.signOutButton:hover {
+    background: #388bfd;
 }
