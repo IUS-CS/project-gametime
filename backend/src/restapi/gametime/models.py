@@ -33,8 +33,10 @@ class REVIEWS(models.Model):
     rating = models.FloatField(
          validators=[MinValueValidator(0.5), MaxValueValidator(5)]
      )
-
     date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("userID", "gameID")
 
 
 class FOLLOWUSER(models.Model):

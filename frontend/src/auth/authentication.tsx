@@ -1,7 +1,7 @@
 
 
 
-export default async function Authentication(url: string, token: string) {
+export default async function Authentication(url: string, token: string ) {
     try {
         
         const res = await fetch(url, {
@@ -19,5 +19,7 @@ export default async function Authentication(url: string, token: string) {
     }
 
 }
+
+
 
 

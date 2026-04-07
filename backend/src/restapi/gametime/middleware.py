@@ -30,6 +30,7 @@ class GameTimeMiddleware:
                 return JsonResponse({"error": "Invalid token"}, status=401)
 
             except Exception:
+                print("hit that")
                 return JsonResponse({"error": "Malformed token"}, status=401)
 
         return self.get_response(request)
