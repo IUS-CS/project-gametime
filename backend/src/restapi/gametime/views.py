@@ -1,8 +1,7 @@
-from urllib import request
 
 import requests
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.decorators import api_view, permission_classes
 from .auth import get_access_token, get_client_id, igdb_authenticate
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -17,6 +16,7 @@ clientID = get_client_id()
 url = 'https://api.igdb.com/v4/games'
 # array of ids so that the amount of fan made romhacks are limited
 gamefilter = [18, 19, 4, 21, 5, 41, 130, 33, 22, 24, 20, 37, 7, 8, 9, 48, 167, 38, 46, 11, 12, 49, 169]
+
 
 # returns a simple okay to make sure that the frontend and backend can communicate
 @api_view(['GET'])
@@ -37,7 +37,7 @@ def igdbPost(query: str):
         # if not authorized we will resend the token
         if response.status_code == 401:
             access_token = igdb_authenticate()       # call authenticate which refreshes the token
-            response = requests.post(url, headers=headers, data=query) # resend request
+            response = requests.post(url, headers=headers, data=query)  # resend request
         return response
     except Exception as e:
         import traceback
@@ -56,7 +56,7 @@ def searchGames(request, query):
                 f'& version_parent = null & first_release_date != null; limit 25;')
         # send to method that post the query to IGDB's rest
         response = igdbPost(data)
-        return Response(response.json(), status=response.status_code) # send data to frontend
+        return Response(response.json(), status=response.status_code)  # send data to frontend
     except Exception as e:
         import traceback
         traceback.print_exc()
@@ -74,7 +74,7 @@ def getAGame(request, id):
                 f'where id = ({id}) & version_parent = null ;')
         # send to function that handles post request
         response = igdbPost(data)
-        return Response(response.json(), status=response.status_code) # sent data to frontend
+        return Response(response.json(), status=response.status_code)  # sent data to frontend
     except Exception as e:
         import traceback
         traceback.print_exc()
@@ -214,8 +214,8 @@ def addFavorite(request):
     if request.method == 'POST':
         data = request.data
         favorites = FAVORITES.objects.create(
-            userID = data['userID'],
-            gameID = data['gameID'],
+            userID=data['userID'],
+            gameID=data['gameID'],
         )
         favorites.save()
         content = {
@@ -231,8 +231,8 @@ def removeFavorite(request):
     if request.method == 'DELETE':
         data = request.data
         favorites = FAVORITES.objects.get(
-            userID = data['userID'],
-            gameID = data['gameID'],
+            userID=data['userID'],
+            gameID=data['gameID'],
         )
         favorites.delete()
         favorites.save()
@@ -249,8 +249,8 @@ def followGame(request):
     if request.method == 'POST':
         data = request.data
         gamefollows = FOLLOWGAME.objects.create(
-            followed = data['followed'],
-            follower = data['follower'],
+            followed=data['followed'],
+            follower=data['follower'],
         )
         gamefollows.save()
         content = {
@@ -266,8 +266,8 @@ def unfollowGame(request):
     if request.method == 'DELETE':
         data = request.data
         gamefollows = FOLLOWGAME.objects.get(
-        followerID = data['followerID'],
-        gameID = data['gameID'],
+            followerID=data['followerID'],
+            gameID=data['gameID'],
         )
         gamefollows.delete()
         gamefollows.save()
@@ -284,8 +284,8 @@ def followUser(request):
     if request.method == 'POST':
         data = request.data
         userfollows = FOLLOWUSER.objects.create(
-            followerID = data['followerID'],
-            gameID = data['gameID'],
+            followerID=data['followerID'],
+            gameID=data['gameID'],
         )
         userfollows.save()
         content = {
@@ -301,8 +301,8 @@ def unfollowUser(request):
     if request.method == 'DELETE':
         data = request.data
         userfollows = FOLLOWUSER.objects.get(
-            followerID = data['followerID'],
-            gameID = data['gameID'],
+            followerID=data['followerID'],
+            gameID=data['gameID'],
         )
         userfollows.delete()
         userfollows.save()
