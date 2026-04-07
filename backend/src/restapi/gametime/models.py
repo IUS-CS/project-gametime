@@ -37,7 +37,7 @@ class REVIEWS(models.Model):
 
     class Meta:
         unique_together = ("userID", "gameID")
-
+        print('you can delete this')
 
 class FOLLOWUSER(models.Model):
     followed = models.ForeignKey(USER, on_delete=models.CASCADE, related_name="followers")
@@ -45,6 +45,7 @@ class FOLLOWUSER(models.Model):
 
     class Meta:
         unique_together = ("followed", "follower")
+
 
 
 class FOLLOWGAME(models.Model):

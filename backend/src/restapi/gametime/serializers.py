@@ -12,3 +12,5 @@ class reviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = REVIEWS
         fields = ['username', 'review', 'rating', 'formatedDate']
+
+        print('hello')
