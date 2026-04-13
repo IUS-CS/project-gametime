@@ -88,3 +88,12 @@
 .iconButton:hover {
     border-color: rgba(255, 255, 255, 0.22);
 }
+
+.logo {
+    height: 42px;
+    width: auto;
+    border-radius: 999px;   /* makes it oval */
+    object-fit: cover;
+
+    display: block;
+}

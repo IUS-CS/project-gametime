@@ -1,6 +1,7 @@
 import styles from "./Header.module.css";
 import { QuerySearch } from "../SearchBar/SearchBar";
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/GametimeLogo.png";
 
 type HeaderProps = {
     onSignIn?: () => void;
@@ -26,7 +27,11 @@ export default function Header(props: HeaderProps) {
                     onClick={() => navigate("/")}
                     style={{ cursor: "pointer" }}
                 >
-                    GameTime
+                    <img
+                        src={logo}
+                        alt="GameTime"
+                        className={styles.logo}
+                    />
                 </div>
                 <button className={styles.primaryButton} onClick={onCreateAccount}>
                     Create Account
