@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import REVIEWS
+from .models import REVIEWS, FAVORITES
 
 
 class reviewSerializer(serializers.ModelSerializer):
@@ -12,3 +12,9 @@ class reviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = REVIEWS
         fields = ['username', 'review', 'rating', 'formatedDate']
+
+
+class gameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FAVORITES
+        fields = ['gameID']

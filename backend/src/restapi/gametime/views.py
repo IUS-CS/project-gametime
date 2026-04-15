@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from .models import USER, REVIEWS, FAVORITES, FOLLOWGAME, FOLLOWUSER, BACKLOG
-from .serializers import reviewSerializer
+from .serializers import reviewSerializer, gameSerializer
 
 # Create your views here.
 # get the client id from the .env file
@@ -287,43 +287,50 @@ def handleBacklog(request):
     return Response({"Couldn't backlog item"})
 
 
-
-
-
-@api_view(['POST'])
+@api_view(['POST', 'DELETE', 'GET'])
 @permission_classes([IsAuthenticated])
 def followUser(request):
-
-
+    followerID = request.user
+    followed = request.data.get("username")
+    followedUser = USER.objects.get(username=followed)
     if request.method == 'POST':
-        data = request.data
-        user = USER.objects.get(username=data['username'])
         userfollows = FOLLOWUSER.objects.create(
-            followerID=user,
-            gameID=data['gameID'],
+            followed=followedUser,
+            follower=followerID,
         )
         userfollows.save()
         content = {
             "User has been followed."
         }
         return Response(content)
-    return Response({"error: Could not follow user."}, status=400)
 
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def unfollowUser(request):
     if request.method == 'DELETE':
-        data = request.data
-        user = USER.objects.get(username=data['username'])
         userfollows = FOLLOWUSER.objects.get(
-            followerID=user,
-            gameID=data['gameID'],
+            followed=followedUser,
+            follower=followerID,
         )
         userfollows.delete()
-        userfollows.save()
         content = {
             "User has been unfollowed."
         }
         return Response(content)
-    return Response({"error: Could not unfollow user."}, status=400)
+    if request.method == 'GET':
+        count = FOLLOWUSER.objects.filter(following=request.user).count()
+        return Response(count)
+
+    return Response({"error: Could not follow user."}, status=400)
+
+@api_view(['GET'])
+def getFollowers(request, user):
+    if request.method == 'GET':
+        user_obj = USER.objects.filter(username=user).first()
+        count = user_obj.followers.count()
+        return Response({'followers': count})
+
+@api_view(['GET'])
+def getFavorites(request, user):
+    if request.method == 'GET':
+        user_obj = USER.objects.filter(username=user).first()
+        games = FAVORITES.objects.filter(userID=user_obj)
+        content = gameSerializer(games, many=True).data
+        return Response(content)

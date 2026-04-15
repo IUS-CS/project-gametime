@@ -3,19 +3,10 @@ import styles from "./Account.module.css";
 import { useEffect, useState } from "react";
 import Authentication from "../../auth/endpoints";
 import type { userInfo } from "../../types/types";
+import { getFavorites, getFollowers } from "../../api/endpoints";
+import type {FavoriteGame, Review} from "../../types/types";
 
-type Review = {
-    id: number;
-    gameTitle: string;
-    rating: number;
-    reviewText: string;
-    createdAt: string;
-};
 
-type FavoriteGame = {
-    id: number;
-    title: string;
-};
 
 export default function Account() {
     const navigate = useNavigate();
@@ -26,6 +17,10 @@ export default function Account() {
 
     // Pull auth token from localStorage for authenticated account requests
     const token = localStorage.getItem("token");
+
+
+    const [followers, setFollowers] = useState<number>(0);
+    const [favorites, setFavorites] = useState<FavoriteGame[]>([]);
 
     // CHANGE THIS!!!! Dummy review data for layout/testing until backend
     const [recentReviews] = useState<Review[]>([
@@ -66,19 +61,18 @@ export default function Account() {
         },
     ]);
 
-    // CHANGE THIS AS WELL!!!!! Dummy favorite games until backend favorites are implemented
-    const [favoriteGames] = useState<FavoriteGame[]>([
-        { id: 1, title: "Resident Evil 4" },
-        { id: 2, title: "Dead Space" },
-        { id: 3, title: "Silent Hill 2" },
-        { id: 4, title: "Resident Evil Remake" },
-    ]);
 
     useEffect(() => {
         async function loadAccount() {
             try {
                 // Authentication helper makes the authenticated request
                 const res = await Authentication(url, token || "");
+                const followers = await getFollowers( localStorage.getItem("username") || "");
+                setFollowers(followers.followers);
+                console.log("Followers count:", followers);
+                const favorites = await getFavorites(localStorage.getItem("username") || "");
+                setFavorites(favorites);
+                
 
                 // If token is invalid or expired, redirect to sign-in
                 if (res?.status === 401) {
@@ -95,6 +89,8 @@ export default function Account() {
                 navigate("/sign-in");
             }
         }
+
+        
 
         loadAccount();
     }, [navigate, token]);
@@ -142,7 +138,7 @@ export default function Account() {
                             <strong>Date Joined:</strong> {formattedJoinDate}
                         </p>
                         <p>
-                            <strong>Followers:</strong> {data?.followers ?? 0}
+                            <strong>Followers:</strong> {followers}
                         </p>
                     </div>
 
@@ -173,9 +169,16 @@ export default function Account() {
                     <h3>Favorite Games</h3>
 
                     <div className={styles.favoriteGrid}>
-                        {favoriteGames.map((game) => (
-                            <div key={game.id} className={styles.favoriteItem}>
-                                {game.title}
+                        {favorites && favorites.map((game) => (
+                            <div key={game.id} className={styles.resultItem}>
+                                <h4 className={styles.title}>{game.name}</h4>
+                                {game.cover && (
+                                    <img className={styles.image}
+                                        src={`https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`}
+                                        alt={`${game.name} cover`}
+                                    />
+                                )}
+
                             </div>
                         ))}
                     </div>

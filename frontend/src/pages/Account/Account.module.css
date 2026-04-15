@@ -65,17 +65,16 @@
     flex-direction: column;
     gap: 0.8rem;
     width: fit-content;
-    margin: 0 auto; 
+    margin: 0 auto;
     margin-bottom: 1.5rem;
     text-align: left
-    
 }
 
 .infoGroup p {
     margin: 0;
     line-height: 1.5;
     color: #e6edf3;
-    
+
 }
 
 
@@ -96,11 +95,12 @@
     color: white;
 }
 
-/* 4 favorite games grid */
+
 .favoriteGrid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(140px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: auto;
 }
 
 
@@ -190,4 +190,31 @@
 
 .signOutButton:hover {
     background: #388bfd;
+}
+
+
+.resultItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  text-align: center;
+  max-width: 100%;
+  max-width: 250px;
+}
+
+.image {
+    width: 100%;
+    max-width: 180px;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+
+    transition: transform 0.25s ease, filter 0.25s ease;
 }
