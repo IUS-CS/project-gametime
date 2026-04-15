@@ -1,0 +1,146 @@
+.page {
+    min-height: 100vh;
+    padding: 3rem 2rem;
+    background: linear-gradient(to bottom, #2b2e33, #1f2227);
+    color: #e6edf3;
+}
+
+.accountLayout {
+    display: grid;
+    grid-template-columns: 360px 360px 360px;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: start;
+    margin-top: 2rem;
+}
+
+.card {
+    background: #0f1115;
+    color: white;
+    padding: 28px;
+    border-radius: 16px;
+    width: 360px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.card h2 {
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.infoGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.infoGroup p {
+    margin: 0;
+    line-height: 1.5;
+    color: #e6edf3;
+}
+
+.panel {
+    background: #0f1115;
+    color: white;
+    padding: 22px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.panel h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.favoriteGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+
+.favoriteItem {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 0.85rem;
+    text-align: center;
+    font-weight: 600;
+    color: #e6edf3;
+}
+
+.reviewScrollBox {
+    max-height: 360px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-right: 0.35rem;
+}
+
+.reviewItem {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 0.9rem;
+}
+
+.reviewHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.4rem;
+}
+
+.reviewGameTitle {
+    font-weight: 700;
+    color: white;
+}
+
+.reviewDate {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.reviewRating {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.45rem;
+}
+
+.starDisplay {
+    color: #ffd34d;
+    font-size: 1rem;
+}
+
+.reviewNumeric {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
+
+.reviewText {
+    margin: 0;
+    color: #e6edf3;
+    line-height: 1.45;
+    font-size: 0.95rem;
+}
+
+.followButton {
+    width: 100%;
+    background: #1f6feb;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.followButton:hover {
+    background: #388bfd;
+}
