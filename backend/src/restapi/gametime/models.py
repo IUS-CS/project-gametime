@@ -13,16 +13,25 @@ class BACKLOG(models.Model):
     userID = models.ForeignKey(USER, on_delete=models.CASCADE)
     gameID = models.IntegerField()
 
+    class Meta:
+        unique_together = ('userID', 'gameID')
+
 
 class COMPLETED(models.Model):
     userID = models.ForeignKey(USER, on_delete=models.CASCADE)
     gameID = models.IntegerField()
+
+    class Meta:
+        unique_together = ('userID', 'gameID')
 # Favorites table
 
 
 class FAVORITES(models.Model):
     userID = models.ForeignKey(USER, on_delete=models.CASCADE)
     gameID = models.IntegerField()
+
+    class Meta:
+        unique_together = ('userID', 'gameID')
 # User Reviews
 
 

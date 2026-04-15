@@ -5,7 +5,11 @@ import styles from "./gamePage.module.css";
 import { fromUnixTime, format } from "date-fns";
 import type { getReview } from "../../types/types";
 import { useNavigate } from "react-router-dom";
-import Authentication from "../../auth/authentication";
+import Authentication from "../../auth/endpoints";
+
+
+import getGame from "../../api/endpoints";
+import { handleFollowGame, handleUnfollowGame, handleSubmitReview, handleAddFavoriteGame, handleUnfavoriteGame, AddToBacklog } from "../../api/endpoints";
 
 
 
@@ -18,7 +22,15 @@ function GamePage() {
     const [game, setGame] = useState<gameObject | null>(null);
     const [reviewText, setReviewText] = useState("");
     const [selectedRating, setSelectedRating] = useState(0);
-    const [buttonName, setButtonName] = useState("sign in");
+    const [submitButtonName, setSubmitButtonName] = useState("sign in");
+
+    const [followButtonName, setFollowButtonName] = useState("follow");
+    const [favoriteButtonName, setFavoriteButtonName] = useState("favorite");
+    const [backlogButtonName, setBacklogButtonName] = useState("add to backlog");
+
+
+   const [authenticated, setAuthenticated] = useState<boolean>(false);
+
     const navigate = useNavigate();
 
     // placeholder till proper implementation
@@ -45,6 +57,91 @@ function GamePage() {
     };
 
 
+
+
+    const handleSubmitReviewButton = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (submitButtonName === "sign in") {
+            navigate("/sign-in");
+            return;
+        }
+
+        // later connect backend here
+        handleSubmitReview(token || "", id || "", reviewText, selectedRating);
+       
+
+            setReviewText("");
+            setSelectedRating(0);
+    };
+    
+
+
+    const handleFollowGameButton = () => {
+        if (followButtonName === "follow") {
+            try{
+                handleFollowGame(id || "", token || "");
+                setFollowButtonName("unfollow");
+            }
+            catch (err) {
+                console.error("Error following game:", err);
+            }
+        }
+        else {
+            try{
+                handleUnfollowGame(id || "", token || "");
+                setFollowButtonName("follow");
+            }
+            catch (err) {
+                console.error("Error unfollowing game:", err);
+            }
+        }
+    };
+
+    const handleFavoriteGameButton = () => {
+        if (favoriteButtonName === "favorite") {
+            try{
+                handleAddFavoriteGame(id || "", token || "");
+                setFavoriteButtonName("unfavorite");
+            }
+            catch (err) {
+                console.error("Error favoriting game:", err);
+            }
+        }
+        else {
+            try{
+                handleUnfavoriteGame(id || "", token || "");
+                setFavoriteButtonName("favorite");
+            }
+            catch (err) {
+                console.error("Error unfavoriting game:", err);
+            }
+        }
+    };
+
+    const handleBacklogButton = () => {
+        if (backlogButtonName === "add to backlog") {
+            try{
+                AddToBacklog(id || "", token || "");
+                setBacklogButtonName("remove from backlog");
+            }
+            catch (err) {
+                console.error("Error adding game to backlog:", err);
+            }
+        }
+    };
+
+    const handleFollowUserButton = () => {
+        // placeholder for follow user functionality
+        try{
+            // handleFollowUser(userId || "", token || "");
+
+        }
+        catch (err) {
+            console.error("Error following user:", err);
+        }
+    };
+
     useEffect(() => {
         async function fetchingData() {
             try {
@@ -52,26 +149,26 @@ function GamePage() {
                 const res = await Authentication(url, token || "");
 
                 if (res?.status === 401) {
-                    setButtonName("sign in");
+                    setSubmitButtonName("sign in");
 
                 }
                 else {
-                    setButtonName("submit review");
+                    setSubmitButtonName("submit review");
+                    setAuthenticated(true);
 
                 }
 
                 if (!id) return;
 
-                fetch(`http://127.0.0.1:8000/gametime/game/${id}/`)
-                    .then((res) => res.json())
-                    .then((data) => {
-                        setGame(data[0] ?? null);
-                    })
-                    .catch((err) => console.error("Game page error:", err));
+                const gameinfo = await getGame(id);
+               
+                setGame(gameinfo[0]);
+                
+
             }
             catch (err) {
                 console.error("Game page authentication error:", err);
-                setButtonName("sign in");
+                setSubmitButtonName("sign in");
             }
         }
         fetchingData();
@@ -99,59 +196,7 @@ function GamePage() {
 
 
 
-    const handleSubmitReview = (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (buttonName === "sign in") {
-            navigate("/sign-in");
-            return;
-        }
-
-        // later connect backend here
-
-        if (reviewText.trim() === "" && selectedRating === 0) {
-            console.log("yogi didn't like you")
-            return;
-        }
-        else {
-
-
-           
-            fetch('http://127.0.0.1:8000/gametime/user/create-review/', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Token ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(
-                    {
-                        gameID: id,
-                        rating: selectedRating,
-                        review: reviewText,
-                        username: localStorage.getItem("username") || "Anonymous",
-                        date: new Date().toISOString()
-                    } 
-                ),
-            })
-                .then((res) => {
-                    if (!res.ok) {
-                        throw new Error("Network response was not ok: " + res.statusText);
-                    }
-                    return res.json();
-                })
-                .then((data) => {
-                    console.log("Review submitted successfully:", data);
-                    // Optionally, you can update the reviews state here to show the new review immediately
-                })
-                .catch((err) => {
-                    console.error("Error submitting review:", err);
-                    alert("There was an error submitting your review. Please try again.");
-                });
-
-            setReviewText("");
-            setSelectedRating(0);
-        }
-    };
+    
 
 
 
@@ -241,6 +286,17 @@ function GamePage() {
                             alt={game.name}
                         />
                     )}
+              
+                    <div>
+                        {authenticated && (
+                            <button className={styles.followButton} onClick={handleFollowGameButton}>
+                                {followButtonName}
+                            </button>
+                        )}
+                        {authenticated && <button className={styles.favoriteButton} onClick={handleFavoriteGameButton}>{favoriteButtonName}</button>}
+                        {authenticated && <button className={styles.backlogButton} onClick={handleBacklogButton}>{backlogButtonName}</button>}
+                    </div>
+                    
 
                     <div className={styles.records}>
                         <p>Release Date: {time}</p>
@@ -282,6 +338,7 @@ function GamePage() {
                                         <div className={styles.reviewHeader}>
                                             <span className={styles.reviewUsername}>
                                                 {review.username}
+                                                {authenticated && <button className={styles.followButton}>+</button>}
                                             </span>
                                             <span className={styles.reviewDate}>
                                                 {review.formatedDate}
@@ -308,7 +365,7 @@ function GamePage() {
                 <div className={styles.reviewCard}>
                     <h2>Write a Review</h2>
 
-                    <form onSubmit={handleSubmitReview} className={styles.reviewForm}>
+                    <form onSubmit={handleSubmitReviewButton} className={styles.reviewForm}>
                         <label className={styles.label}>Your Rating</label>
 
                         <div className={styles.starRow}>
@@ -332,7 +389,7 @@ function GamePage() {
                         />
 
                         <button type="submit" className={styles.submitButton}>
-                            {buttonName}
+                            {submitButtonName}
                         </button>
                     </form>
                 </div>

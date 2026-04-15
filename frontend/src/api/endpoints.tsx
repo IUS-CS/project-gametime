@@ -1,0 +1,233 @@
+
+export default async function getGame(id: string) {
+    try {
+        const res = await fetch(`http://127.0.0.1:8000/gametime/game/${id}/`);
+        if (!res.ok) {
+            throw new Error("Failed to fetch game");
+        }
+        const data = await res.json();
+        return data;
+    }
+    catch (err) {
+        console.error("Game page error:", err);
+        throw err;
+    }
+}
+
+
+
+
+
+ export const handleSubmitReview = (token: string, id: string, reviewText: string, selectedRating: number) => {
+      
+
+      
+
+        
+
+        if (reviewText.trim() === "" && selectedRating === 0) {
+            
+            return;
+        }
+        else {
+
+
+           
+            fetch('http://127.0.0.1:8000/gametime/user/create-review/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    {
+                        gameID: id,
+                        rating: selectedRating,
+                        review: reviewText,
+                        username: localStorage.getItem("username") || "Anonymous",
+                        date: new Date().toISOString()
+                    } 
+                ),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error("Network response was not ok: " + res.statusText);
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log("Review submitted successfully:", data);
+                    // Optionally, you can update the reviews state here to show the new review immediately
+                })
+                .catch((err) => {
+                    console.error("Error submitting review:", err);
+                    alert("There was an error submitting your review. Please try again.");
+                });
+
+            
+        }
+    };
+
+
+
+
+
+
+
+
+export const handleFollowGame = (id: string, token: string) => {
+
+        
+
+        try{
+            fetch(`http://127.0.0.1:8000/gametime/user/account/followed-games/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    gameID: id,
+                    username: localStorage.getItem("username") || "Anonymous"
+                }),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error("Network response was not ok: " + res.statusText);
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log("Game followed successfully:", data);
+                   
+                })
+                .catch((err) => {
+                    console.error("Error following game:", err);
+                    alert("There was an error following the game. Please try again.");
+                });
+        }
+        catch (err) {
+            console.error("Error following game:", err);
+        }
+    }
+    
+
+
+export const handleUnfollowGame = (id: string, token: string) => {
+    try{
+            fetch(`http://127.0.0.1:8000/gametime/user/account/followed-games/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ gameID: id }),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error("Network response was not ok: " + res.statusText);
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log("Game unfollowed successfully:", data);
+                })
+                .catch((err) => {
+                    console.error("Error unfollowing game:", err);
+                    alert("There was an error unfollowing the game. Please try again.");
+                });
+        }
+        catch (err) {
+            console.error("Error unfollowing game:", err);
+        
+
+    }
+}
+
+export const handleAddFavoriteGame = (id: string, token: string) => {
+    try{
+            fetch(`http://127.0.0.1:8000/gametime/user/account/favorites/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ gameID: id }),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error("Network response was not ok: " + res.statusText);
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log("Game favorited successfully:", data);
+                })
+                .catch((err) => {
+                    console.error("Error favoriting game:", err);
+                    alert("There was an error favoriting the game. Please try again.");
+                });
+        }
+        catch (err) {
+            console.error("Error favoriting game:", err);
+    }
+    }
+
+export const handleUnfavoriteGame = (id: string, token: string) => {
+    try{
+            fetch(`http://127.0.0.1:8000/gametime/user/account/favorites/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ gameID: id }),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error("Network response was not ok: " + res.statusText);
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log("Game unfavorited successfully:", data);
+                })
+                .catch((err) => {
+                    console.error("Error unfavoriting game:", err);
+                    alert("There was an error unfavoriting the game. Please try again.");
+                });
+        }
+        catch (err) {
+            console.error("Error unfavoriting game:", err);
+        }
+    }
+
+
+    export const AddToBacklog = (id: string, token: string) => {
+        try{
+            fetch(`http://127.0.0.1:8000/gametime/user/account/backlog/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ gameID: id }),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error("Network response was not ok: " + res.statusText);
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log("Game added to backlog successfully:", data);
+                })
+                .catch((err) => {
+                    console.error("Error adding game to backlog:", err);
+                    alert("There was an error adding the game to your backlog. Please try again.");
+                });
+        }
+        catch (err) {
+            console.error("Error adding game to backlog:", err);
+        }   
+    }

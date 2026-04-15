@@ -6,7 +6,7 @@ from .auth import get_access_token, get_client_id, igdb_authenticate
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from .models import USER, REVIEWS, FAVORITES, FOLLOWGAME, FOLLOWUSER
+from .models import USER, REVIEWS, FAVORITES, FOLLOWGAME, FOLLOWUSER, BACKLOG
 from .serializers import reviewSerializer
 
 # Create your views here.
@@ -208,69 +208,62 @@ def deleteReview(request):
     return Response({"error: Could not delete review."}, status=400)
 
 
-@api_view(['POST'])
+@api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
-def addFavorite(request):
+def handleFavorites(request):
+    user = request.user
+    gameID = request.data.get("gameID")
     if request.method == 'POST':
-        data = request.data
         favorites = FAVORITES.objects.create(
-            userID=data['userID'],
-            gameID=data['gameID'],
+            userID=user,
+            gameID=gameID,
         )
         favorites.save()
         content = {
             "Favorite has been added!"
         }
         return Response(content)
-    return Response({"error: Could not add to favorites."}, status=400)
-
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def removeFavorite(request):
     if request.method == 'DELETE':
-        data = request.data
         favorites = FAVORITES.objects.get(
-            userID=data['userID'],
-            gameID=data['gameID'],
+            userID=user,
+            gameID=gameID,
         )
         favorites.delete()
-        favorites.save()
         content = {
             "Favorite has been removed."
         }
         return Response(content)
-    return Response({"error: Could not remove from favorites."}, status=400)
+
+    return Response({"error: Could not fufil request."}, status=400)
 
 
-@api_view(['POST'])
+
+@api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
-def followGame(request):
+def handleFollowGames(request):
+    user = request.user
+    gameId = request.data.get("gameID")
+
     if request.method == 'POST':
-        data = request.data
+
         gamefollows = FOLLOWGAME.objects.create(
-            followed=data['followed'],
-            follower=data['follower'],
+            gameID=gameId,
+            followerID=user,
         )
         gamefollows.save()
         content = {
             "Game has been followed."
         }
         return Response(content)
-    return Response({"error: Could not follow user."}, status=400)
 
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def unfollowGame(request):
     if request.method == 'DELETE':
-        data = request.data
+
         gamefollows = FOLLOWGAME.objects.get(
-            followerID=data['followerID'],
-            gameID=data['gameID'],
+            followerID=user,
+            gameID=gameId,
         )
         gamefollows.delete()
-        gamefollows.save()
+
         content = {
             "Game has been unfollowed."
         }
@@ -280,11 +273,33 @@ def unfollowGame(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+def handleBacklog(request):
+    if request.method == 'POST':
+        user = request.user
+        backlogId = request.data.get("backlogID")
+        logged = BACKLOG.objects.filter(
+            gameID=backlogId,
+            userID=user
+        )
+        logged.delete()
+        content = {"message": "Backlog"}
+        return Response(content, status=200)
+    return Response({"Couldn't backlog item"})
+
+
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def followUser(request):
+
+
     if request.method == 'POST':
         data = request.data
+        user = USER.objects.get(username=data['username'])
         userfollows = FOLLOWUSER.objects.create(
-            followerID=data['followerID'],
+            followerID=user,
             gameID=data['gameID'],
         )
         userfollows.save()
@@ -300,8 +315,9 @@ def followUser(request):
 def unfollowUser(request):
     if request.method == 'DELETE':
         data = request.data
+        user = USER.objects.get(username=data['username'])
         userfollows = FOLLOWUSER.objects.get(
-            followerID=data['followerID'],
+            followerID=user,
             gameID=data['gameID'],
         )
         userfollows.delete()

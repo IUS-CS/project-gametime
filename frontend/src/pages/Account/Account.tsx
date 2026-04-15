@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./Account.module.css";
 import { useEffect, useState } from "react";
-import Authentication from "../../auth/authentication";
+import Authentication from "../../auth/endpoints";
 import type { userInfo } from "../../types/types";
 
 type Review = {
@@ -128,9 +128,10 @@ export default function Account() {
             <div className={styles.accountLayout}>
                 {/* Main account information box */}
                 <div className={styles.card}>
-                    <h2>Account</h2>
+                    
 
                     <div className={styles.infoGroup}>
+                        <h2>Account</h2>
                         <p>
                             <strong>Username:</strong> {data?.username ?? "Loading..."}
                         </p>
@@ -154,6 +155,16 @@ export default function Account() {
                         className={styles.signOutButton}
                     >
                         Sign Out
+                    </button>
+
+                    <button
+                        onClick={() => {
+                            localStorage.clear();
+                            navigate("/sign-in");
+                        }}
+                        className={styles.signOutButton}
+                    >
+                        Delete Account
                     </button>
                 </div>
 
