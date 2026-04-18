@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Authentication from "../../auth/endpoints";
 
 
-import getGame from "../../api/endpoints";
+import getGame, {  checkIfFavorite, checkIfFollowingGame, checkIfInBacklog } from "../../api/endpoints";
 import { handleFollowGame, handleUnfollowGame, handleSubmitReview, handleAddFavoriteGame, handleUnfavoriteGame, handleUnfollowUser, handleFollowUser, AddToBacklog } from "../../api/endpoints";
 
 
@@ -28,6 +28,9 @@ function GamePage() {
     const [favoriteButtonName, setFavoriteButtonName] = useState("favorite");
     const [backlogButtonName, setBacklogButtonName] = useState("add to backlog");
     const [followUserButtonName, setFollowUserButtonName] = useState<{[key:string]: boolean}>({});
+
+  
+    
 
 
    const [authenticated, setAuthenticated] = useState<boolean>(false);
@@ -164,6 +167,24 @@ function GamePage() {
 
                 const res = await Authentication(url, token || "");
 
+                const checkBacklog = await checkIfInBacklog(token || "", id || "");
+                if (checkBacklog === true) {
+                    setBacklogButtonName("logged");
+                }
+
+                const favorite = await checkIfFavorite( token|| "", id || "");
+                if (favorite === true) {
+                    setFavoriteButtonName("unfavorite");
+                }
+
+                const followingGame = await checkIfFollowingGame(token || "", id || "");
+                if (followingGame === true) {
+                    setFollowButtonName("unfollow");
+                }
+
+               
+                
+
                 if (res?.status === 401) {
                     setSubmitButtonName("sign in");
 
@@ -189,6 +210,7 @@ function GamePage() {
         }
         fetchingData();
         getReviews();
+        
     }, [id]);
 
 

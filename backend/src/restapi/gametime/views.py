@@ -1,3 +1,4 @@
+from urllib import request
 
 import requests
 from rest_framework.authtoken.models import Token
@@ -200,7 +201,6 @@ def deleteReview(request):
             date=data['date'],
         )
         review.delete()
-        review.save()
         content = {
             "Review has been deleted!"
         }
@@ -237,7 +237,6 @@ def handleFavorites(request):
     return Response({"error: Could not fufil request."}, status=400)
 
 
-
 @api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def handleFollowGames(request):
@@ -271,20 +270,44 @@ def handleFollowGames(request):
     return Response({"error: Could not unfollow game."})
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def checkIfFollowGame(request, id: int):
+    user = request.user
+    exists = FOLLOWGAME.objects.filter(followerID=user, gameID=id).exists()
+    if exists:
+        return Response(True, status=200)
+    else:
+        return Response(False, status=200)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def handleBacklog(request):
     if request.method == 'POST':
         user = request.user
-        backlogId = request.data.get("backlogID")
-        logged = BACKLOG.objects.filter(
+        backlogId = request.data.get("gameID")
+        logged = BACKLOG.objects.create(
             gameID=backlogId,
             userID=user
         )
-        logged.delete()
+        logged.save()
         content = {"message": "Backlog"}
         return Response(content, status=200)
     return Response({"Couldn't backlog item"})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def checkBacklog(request, id: int):
+    user = request.user
+    exists = BACKLOG.objects.filter(userID=user, gameID=id).exists()
+    if exists:
+        return Response(True, status=200)
+    else:
+        return Response(False, status=200)
+
+
 
 
 @api_view(['POST', 'DELETE', 'GET'])
@@ -314,11 +337,9 @@ def followUser(request):
             "User has been unfollowed."
         }
         return Response(content)
-    if request.method == 'GET':
-        count = FOLLOWUSER.objects.filter(following=request.user).count()
-        return Response(count)
 
     return Response({"error: Could not follow user."}, status=400)
+
 
 @api_view(['GET'])
 def getFollowers(request, user):
@@ -327,6 +348,7 @@ def getFollowers(request, user):
         count = user_obj.followers.count()
         return Response({'followers': count})
 
+
 @api_view(['GET'])
 def getFavorites(request, user):
     if request.method == 'GET':
@@ -334,3 +356,14 @@ def getFavorites(request, user):
         games = FAVORITES.objects.filter(userID=user_obj)
         content = gameSerializer(games, many=True).data
         return Response(content)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def checkFavorites(request, id: int):
+    user = request.user
+    exists = FAVORITES.objects.filter(userID=user, gameID=id).exists()
+    if exists:
+        return Response(True, status=200)
+    else:
+        return Response(False, status=200)
