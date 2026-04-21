@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import REVIEWS, FAVORITES
+from .models import REVIEWS, FAVORITES, BACKLOG, USER
+
 
 
 class reviewSerializer(serializers.ModelSerializer):
@@ -18,3 +19,12 @@ class gameSerializer(serializers.ModelSerializer):
     class Meta:
         model = FAVORITES
         fields = ['gameID']
+
+
+
+class backlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BACKLOG
+        fields = ['gameID']
+
+

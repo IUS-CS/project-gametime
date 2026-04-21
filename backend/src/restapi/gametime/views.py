@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from .models import USER, REVIEWS, FAVORITES, FOLLOWGAME, FOLLOWUSER, BACKLOG
-from .serializers import reviewSerializer, gameSerializer
+from .serializers import reviewSerializer, gameSerializer, backlogSerializer
 
 # Create your views here.
 # get the client id from the .env file
@@ -270,22 +270,12 @@ def handleFollowGames(request):
     return Response({"error: Could not unfollow game."})
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def checkIfFollowGame(request, id: int):
-    user = request.user
-    exists = FOLLOWGAME.objects.filter(followerID=user, gameID=id).exists()
-    if exists:
-        return Response(True, status=200)
-    else:
-        return Response(False, status=200)
 
-
-@api_view(['POST'])
+@api_view(['POST', 'GET'])
 @permission_classes([IsAuthenticated])
 def handleBacklog(request):
+    user = request.user
     if request.method == 'POST':
-        user = request.user
         backlogId = request.data.get("gameID")
         logged = BACKLOG.objects.create(
             gameID=backlogId,
@@ -294,23 +284,15 @@ def handleBacklog(request):
         logged.save()
         content = {"message": "Backlog"}
         return Response(content, status=200)
+    if request.method == 'GET':
+        backlogs = BACKLOG.objects.filter(userID=user)
+        content = backlogSerializer(backlogs, many=True).data
+        return Response(content, status=200)
+
     return Response({"Couldn't backlog item"})
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def checkBacklog(request, id: int):
-    user = request.user
-    exists = BACKLOG.objects.filter(userID=user, gameID=id).exists()
-    if exists:
-        return Response(True, status=200)
-    else:
-        return Response(False, status=200)
-
-
-
-
-@api_view(['POST', 'DELETE', 'GET'])
+@api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def followUser(request):
     followerID = request.user
@@ -357,13 +339,12 @@ def getFavorites(request, user):
         content = gameSerializer(games, many=True).data
         return Response(content)
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def checkFavorites(request, id: int):
+def checkButtons(request, id: int):
     user = request.user
-    exists = FAVORITES.objects.filter(userID=user, gameID=id).exists()
-    if exists:
-        return Response(True, status=200)
-    else:
-        return Response(False, status=200)
+    checkBacklog = BACKLOG.objects.filter(userID=user, gameID=id).exists()
+    checkFavorites = FAVORITES.objects.filter(userID=user, gameID=id).exists()
+    checkFollow = FOLLOWGAME.objects.filter(followerID=user, gameID=id).exists()
+    checks = [checkFollow, checkFavorites, checkBacklog]
+    return Response(checks, status=200)

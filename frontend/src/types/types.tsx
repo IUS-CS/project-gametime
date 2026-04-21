@@ -84,3 +84,11 @@ export type FavoriteGame = {
     };
 };
 
+export type BacklogGame = {
+    id: number;
+    name: string;
+    cover?: {
+        image_id: string;
+    };
+};
+

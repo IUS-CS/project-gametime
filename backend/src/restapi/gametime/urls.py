@@ -13,11 +13,10 @@ urlpatterns = [
     path('followers/<str:user>/', views.getFollowers),
     path('favorites/<str:user>/', views.getFavorites),
     path('user/account/favorites/', views.handleFavorites),
-    path('user/account/check/favorites/<int:id>/', views.checkFavorites),
     path('user/account/followed-games/', views.handleFollowGames),
-    path('user/account/check/followed-games/<int:id>/', views.checkIfFollowGame),
     path('user/account/followed-users/', views.followUser),
     path('user/account/backlog/', views.handleBacklog),
-    path('user/account/check/backlog/<int:id>/', views.checkBacklog)
+    path('user/account/check/buttons/<int:id>/', views.checkButtons)
+
 
 ]

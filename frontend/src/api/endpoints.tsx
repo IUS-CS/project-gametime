@@ -20,11 +20,6 @@ export default async function getGame(id: string) {
 
 export const handleSubmitReview = (token: string, id: string, reviewText: string, selectedRating: number) => {
 
-
-
-
-
-
     if (reviewText.trim() === "" && selectedRating === 0) {
 
         return;
@@ -67,9 +62,6 @@ export const handleSubmitReview = (token: string, id: string, reviewText: string
 
     }
 };
-
-
-
 
 
 
@@ -142,26 +134,7 @@ export const handleUnfollowGame = (id: string, token: string) => {
 }
 
 
-export const checkIfFollowingGame = async (token: string, gameID: string) => {
-    try {
-        const res = await fetch(`http://127.0.0.1:8000/gametime/user/account/check/followed-games/${gameID}/`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Token ${token}`
-            },
 
-        });
-        if (!res.ok) {
-            throw new Error("Failed to fetch followed users");
-        }
-        const data = await res.json();
-        return data;
-    }
-    catch (err) {
-        console.error("Error checking if following:", err);
-        return false;
-    }
-};
 
 
 
@@ -246,23 +219,7 @@ export const handleUnfavoriteGame = (id: string, token: string) => {
     }
 }
 
-export const checkIfFavorite = async (token: string, gameID: string) => {
-    try {
-        const res = await fetch(`http://127.0.0.1:8000/gametime/user/account/check/favorites/${gameID}/`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Token ${token}`
-            },
-        });
 
-        const data = await res.json();
-        console.log("Favorite check result:", data);
-        return data;
-    } catch (err) {
-        console.error("Error checking if game is favorite:", err);
-        return false;
-    }
-};
 
 export const handleFollowUser = (username: string, token: string) => {
     try {
@@ -341,8 +298,6 @@ export const getFollowers = async (username: string) => {
 
 
 
-
-
 export const AddToBacklog = (id: string, token: string) => {
     try {
         fetch(`http://127.0.0.1:8000/gametime/user/account/backlog/`, {
@@ -372,23 +327,48 @@ export const AddToBacklog = (id: string, token: string) => {
     }
 }
 
-export const checkIfInBacklog = async (token: string, gameID: string) => {
+export const getBacklog = async (token: string) => {
     try {
-        const res = await fetch(`http://127.0.0.1:8000/gametime/user/account/check/backlog/${gameID}/`, {
+        const res = await fetch(`http://127.0.0.1:8000/gametime/user/account/backlog/`, {
             method: 'GET',
             headers: {
-                'Authorization': `Token ${token}`
+                'Authorization': `Token ${token}`,
             },
         });
         if (!res.ok) {
             throw new Error("Failed to fetch backlog games");
         }
         const data = await res.json();
-        console.log("Backlog check result:", data);
-        return Boolean(data);
+        const Backlog = data.map((item: { gameID: number }) => item.gameID).join(", ");
+        if (Backlog.length === 0) {
+            return [];
+        }
+        const backlogData = await getGame(Backlog);
+        return backlogData;
     }
     catch (err) {
-        console.error("Error checking if in backlog:", err);
+        console.error("Error fetching backlog games:", err);
+        throw err;
+    }
+};
+
+
+export const checkButtons = async (id: string, token: string) => {
+    try {   
+        const res = await fetch(`http://127.0.0.1:8000/gametime/user/account/check/buttons/${id}/`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Token ${token}`,
+            },
+        });
+        if (!res.ok) {
+            throw new Error("Failed to fetch button states");
+        }
+        const data = await res.json();
+        return data;
+    }
+    catch (err) {
+        console.error("Error fetching backlog games:", err);
         throw err;
     }
 };

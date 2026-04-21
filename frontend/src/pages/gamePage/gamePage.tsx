@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Authentication from "../../auth/endpoints";
 
 
-import getGame, {  checkIfFavorite, checkIfFollowingGame, checkIfInBacklog } from "../../api/endpoints";
+import getGame, { checkButtons } from "../../api/endpoints";
 import { handleFollowGame, handleUnfollowGame, handleSubmitReview, handleAddFavoriteGame, handleUnfavoriteGame, handleUnfollowUser, handleFollowUser, AddToBacklog } from "../../api/endpoints";
 
 
@@ -27,19 +27,19 @@ function GamePage() {
     const [followButtonName, setFollowButtonName] = useState("follow");
     const [favoriteButtonName, setFavoriteButtonName] = useState("favorite");
     const [backlogButtonName, setBacklogButtonName] = useState("add to backlog");
-    const [followUserButtonName, setFollowUserButtonName] = useState<{[key:string]: boolean}>({});
-
-  
-    
+    const [followUserButtonName, setFollowUserButtonName] = useState<{ [key: string]: boolean }>({});
 
 
-   const [authenticated, setAuthenticated] = useState<boolean>(false);
+
+
+
+    const [authenticated, setAuthenticated] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
     // placeholder till proper implementation
     const [reviews, setReviews] = useState<getReview[]>([]);
-   
+
 
 
 
@@ -47,14 +47,14 @@ function GamePage() {
 
 
 
-     const getReviews = () => {
-        try{
+    const getReviews = () => {
+        try {
             fetch(`http://127.0.0.1:8000/gametime/reviews/${id}/`)
-            .then((res) => res.json())
-            .then((data) => {
-                setReviews(data);
-            })
-        }    
+                .then((res) => res.json())
+                .then((data) => {
+                    setReviews(data);
+                })
+        }
         catch (err) {
             console.error("Error fetching reviews:", err);
         }
@@ -73,17 +73,17 @@ function GamePage() {
 
         // later connect backend here
         handleSubmitReview(token || "", id || "", reviewText, selectedRating);
-       
 
-            setReviewText("");
-            setSelectedRating(0);
+
+        setReviewText("");
+        setSelectedRating(0);
     };
-    
+
 
 
     const handleFollowGameButton = () => {
         if (followButtonName === "follow") {
-            try{
+            try {
                 handleFollowGame(id || "", token || "");
                 setFollowButtonName("unfollow");
             }
@@ -92,7 +92,7 @@ function GamePage() {
             }
         }
         else {
-            try{
+            try {
                 handleUnfollowGame(id || "", token || "");
                 setFollowButtonName("follow");
             }
@@ -104,7 +104,7 @@ function GamePage() {
 
     const handleFavoriteGameButton = () => {
         if (favoriteButtonName === "favorite") {
-            try{
+            try {
                 handleAddFavoriteGame(id || "", token || "");
                 setFavoriteButtonName("unfavorite");
             }
@@ -113,7 +113,7 @@ function GamePage() {
             }
         }
         else {
-            try{
+            try {
                 handleUnfavoriteGame(id || "", token || "");
                 setFavoriteButtonName("favorite");
             }
@@ -125,7 +125,7 @@ function GamePage() {
 
     const handleBacklogButton = () => {
         if (backlogButtonName === "add to backlog") {
-            try{
+            try {
                 AddToBacklog(id || "", token || "");
                 setBacklogButtonName("remove from backlog");
             }
@@ -140,25 +140,25 @@ function GamePage() {
         const isFollowing = followUserButtonName[username];
         if (!isFollowing) {
             setFollowUserButtonName((prev) => ({ ...prev, [username]: true }));
-            try{
-            console.log("we are ", localStorage.getItem("username"), "and we want to follow ", username);
-            handleFollowUser(username || "", token || "");
+            try {
+                console.log("we are ", localStorage.getItem("username"), "and we want to follow ", username);
+                handleFollowUser(username || "", token || "");
 
-        }
-        catch (err) {
-            console.error("Error following user:", err);
-        }
+            }
+            catch (err) {
+                console.error("Error following user:", err);
+            }
         }
         else {
             setFollowUserButtonName((prev) => ({ ...prev, [username]: false }));
-        try{
-            handleUnfollowUser(username || "", token || "");
+            try {
+                handleUnfollowUser(username || "", token || "");
 
-        }
-        catch (err) {
-            console.error("Error following user:", err);
-        }
-    };
+            }
+            catch (err) {
+                console.error("Error following user:", err);
+            }
+        };
     };
 
     useEffect(() => {
@@ -167,23 +167,9 @@ function GamePage() {
 
                 const res = await Authentication(url, token || "");
 
-                const checkBacklog = await checkIfInBacklog(token || "", id || "");
-                if (checkBacklog === true) {
-                    setBacklogButtonName("logged");
-                }
 
-                const favorite = await checkIfFavorite( token|| "", id || "");
-                if (favorite === true) {
-                    setFavoriteButtonName("unfavorite");
-                }
 
-                const followingGame = await checkIfFollowingGame(token || "", id || "");
-                if (followingGame === true) {
-                    setFollowButtonName("unfollow");
-                }
 
-               
-                
 
                 if (res?.status === 401) {
                     setSubmitButtonName("sign in");
@@ -191,16 +177,31 @@ function GamePage() {
                 }
                 else {
                     setSubmitButtonName("submit review");
+
                     setAuthenticated(true);
+                    const buttonData = await checkButtons(id || "", token || "");
+                    if (buttonData[0] === true) {
+                        setFollowButtonName("unfollow");
+                    }
+
+                    if (buttonData[1] === true) {
+                        setFavoriteButtonName("unfavorite");
+                    }
+
+                    if (buttonData[2] === true) {
+                        setBacklogButtonName("logged");
+                    }
 
                 }
 
                 if (!id) return;
+                
+                
 
                 const gameinfo = await getGame(id);
-               
+
                 setGame(gameinfo[0]);
-                
+
 
             }
             catch (err) {
@@ -210,7 +211,7 @@ function GamePage() {
         }
         fetchingData();
         getReviews();
-        
+
     }, [id]);
 
 
@@ -234,7 +235,7 @@ function GamePage() {
 
 
 
-    
+
 
 
 
@@ -324,7 +325,7 @@ function GamePage() {
                             alt={game.name}
                         />
                     )}
-              
+
                     <div>
                         {authenticated && (
                             <button className={styles.followButton} onClick={handleFollowGameButton}>
@@ -334,7 +335,7 @@ function GamePage() {
                         {authenticated && <button className={styles.favoriteButton} onClick={handleFavoriteGameButton}>{favoriteButtonName}</button>}
                         {authenticated && <button className={styles.backlogButton} onClick={handleBacklogButton}>{backlogButtonName}</button>}
                     </div>
-                    
+
 
                     <div className={styles.records}>
                         <p>Release Date: {time}</p>
@@ -376,7 +377,7 @@ function GamePage() {
                                         <div className={styles.reviewHeader}>
                                             <span className={styles.reviewUsername}>
                                                 {review.username}
-                                                {authenticated && <button className={styles.followButton} onClick={() => handleFollowUserButton(review.username)}>{followUserButtonName[review.username] ? '✔': '+' }</button>}
+                                                {authenticated && <button className={styles.followButton} onClick={() => handleFollowUserButton(review.username)}>{followUserButtonName[review.username] ? '✔' : '+'}</button>}
                                             </span>
                                             <span className={styles.reviewDate}>
                                                 {review.formatedDate}
