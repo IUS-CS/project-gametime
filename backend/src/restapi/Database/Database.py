@@ -16,6 +16,10 @@ jsonPath = "backend/src/restapi/Database/Data/database1.json"
 def main():
     #CreateDatabaseFile(_path, False)
     ConnectToDatabase(_path)
+    try:
+        _console.execute("ALTER TABLE gametime_backlog ADD COLUMN isCompleted INTEGER")
+    except:
+        pass
     ResetDatabase()
     #Initialize()
     #CreateUser("foo", "bar", "foobar")
