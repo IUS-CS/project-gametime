@@ -63,8 +63,32 @@ export type getReview = {
     formatedDate: string;
 };
 
+export type Review = {
+    id: number;
+    gameTitle: string;
+    rating: number;
+    reviewText: string;
+    createdAt: string;
+};
+
 export type postReview = {
     gameId: number;
     rating: number;
     reviewText: string;
 }
+export type FavoriteGame = {
+    id: number;
+    name: string;
+    cover?: {
+        image_id: string;
+    };
+};
+
+export type BacklogGame = {
+    id: number;
+    name: string;
+    cover?: {
+        image_id: string;
+    };
+};
+

@@ -1,3 +1,4 @@
+from urllib import request
 
 import requests
 from rest_framework.authtoken.models import Token
@@ -6,8 +7,8 @@ from .auth import get_access_token, get_client_id, igdb_authenticate
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from .models import USER, REVIEWS, FAVORITES, FOLLOWGAME, FOLLOWUSER
-from .serializers import reviewSerializer
+from .models import USER, REVIEWS, FAVORITES, FOLLOWGAME, FOLLOWUSER, BACKLOG
+from .serializers import reviewSerializer, gameSerializer, backlogSerializer
 
 # Create your views here.
 # get the client id from the .env file
@@ -200,7 +201,6 @@ def deleteReview(request):
             date=data['date'],
         )
         review.delete()
-        review.save()
         content = {
             "Review has been deleted!"
         }
@@ -208,69 +208,61 @@ def deleteReview(request):
     return Response({"error: Could not delete review."}, status=400)
 
 
-@api_view(['POST'])
+@api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
-def addFavorite(request):
+def handleFavorites(request):
+    user = request.user
+    gameID = request.data.get("gameID")
     if request.method == 'POST':
-        data = request.data
         favorites = FAVORITES.objects.create(
-            userID=data['userID'],
-            gameID=data['gameID'],
+            userID=user,
+            gameID=gameID,
         )
         favorites.save()
         content = {
             "Favorite has been added!"
         }
         return Response(content)
-    return Response({"error: Could not add to favorites."}, status=400)
-
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def removeFavorite(request):
     if request.method == 'DELETE':
-        data = request.data
         favorites = FAVORITES.objects.get(
-            userID=data['userID'],
-            gameID=data['gameID'],
+            userID=user,
+            gameID=gameID,
         )
         favorites.delete()
-        favorites.save()
         content = {
             "Favorite has been removed."
         }
         return Response(content)
-    return Response({"error: Could not remove from favorites."}, status=400)
+
+    return Response({"error: Could not fufil request."}, status=400)
 
 
-@api_view(['POST'])
+@api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
-def followGame(request):
+def handleFollowGames(request):
+    user = request.user
+    gameId = request.data.get("gameID")
+
     if request.method == 'POST':
-        data = request.data
+
         gamefollows = FOLLOWGAME.objects.create(
-            followed=data['followed'],
-            follower=data['follower'],
+            gameID=gameId,
+            followerID=user,
         )
         gamefollows.save()
         content = {
             "Game has been followed."
         }
         return Response(content)
-    return Response({"error: Could not follow user."}, status=400)
 
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def unfollowGame(request):
     if request.method == 'DELETE':
-        data = request.data
+
         gamefollows = FOLLOWGAME.objects.get(
-            followerID=data['followerID'],
-            gameID=data['gameID'],
+            followerID=user,
+            gameID=gameId,
         )
         gamefollows.delete()
-        gamefollows.save()
+
         content = {
             "Game has been unfollowed."
         }
@@ -278,36 +270,81 @@ def unfollowGame(request):
     return Response({"error: Could not unfollow game."})
 
 
-@api_view(['POST'])
+
+@api_view(['POST', 'GET'])
+@permission_classes([IsAuthenticated])
+def handleBacklog(request):
+    user = request.user
+    if request.method == 'POST':
+        backlogId = request.data.get("gameID")
+        logged = BACKLOG.objects.create(
+            gameID=backlogId,
+            userID=user
+        )
+        logged.save()
+        content = {"message": "Backlog"}
+        return Response(content, status=200)
+    if request.method == 'GET':
+        backlogs = BACKLOG.objects.filter(userID=user)
+        content = backlogSerializer(backlogs, many=True).data
+        return Response(content, status=200)
+
+    return Response({"Couldn't backlog item"})
+
+
+@api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def followUser(request):
+    followerID = request.user
+    followed = request.data.get("username")
+    followedUser = USER.objects.get(username=followed)
     if request.method == 'POST':
-        data = request.data
         userfollows = FOLLOWUSER.objects.create(
-            followerID=data['followerID'],
-            gameID=data['gameID'],
+            followed=followedUser,
+            follower=followerID,
         )
         userfollows.save()
         content = {
             "User has been followed."
         }
         return Response(content)
-    return Response({"error: Could not follow user."}, status=400)
 
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def unfollowUser(request):
     if request.method == 'DELETE':
-        data = request.data
         userfollows = FOLLOWUSER.objects.get(
-            followerID=data['followerID'],
-            gameID=data['gameID'],
+            followed=followedUser,
+            follower=followerID,
         )
         userfollows.delete()
-        userfollows.save()
         content = {
             "User has been unfollowed."
         }
         return Response(content)
-    return Response({"error: Could not unfollow user."}, status=400)
+
+    return Response({"error: Could not follow user."}, status=400)
+
+
+@api_view(['GET'])
+def getFollowers(request, user):
+    if request.method == 'GET':
+        user_obj = USER.objects.filter(username=user).first()
+        count = user_obj.followers.count()
+        return Response({'followers': count})
+
+
+@api_view(['GET'])
+def getFavorites(request, user):
+    if request.method == 'GET':
+        user_obj = USER.objects.filter(username=user).first()
+        games = FAVORITES.objects.filter(userID=user_obj)
+        content = gameSerializer(games, many=True).data
+        return Response(content)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def checkButtons(request, id: int):
+    user = request.user
+    checkBacklog = BACKLOG.objects.filter(userID=user, gameID=id).exists()
+    checkFavorites = FAVORITES.objects.filter(userID=user, gameID=id).exists()
+    checkFollow = FOLLOWGAME.objects.filter(followerID=user, gameID=id).exists()
+    checks = [checkFollow, checkFavorites, checkBacklog]
+    return Response(checks, status=200)

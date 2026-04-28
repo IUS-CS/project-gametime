@@ -134,6 +134,17 @@
     cursor: pointer;
 }
 
+.followButton, .favoriteButton, .backlogButton {
+    background: #3e4b5f;
+    color: rgba(242, 237, 237, 0.87);
+    border: none;
+    border-radius: 6px;
+    padding: .5rem .5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
 .submitButton:hover {
     background: #388bfd;
 }

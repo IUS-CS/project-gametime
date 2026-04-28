@@ -39,7 +39,8 @@ And this in the frontend directory:
 npm install
 ```
 
-
+## populating database
+For testing purposes, you can populate the database with randomly generated data by running `Database.py` in `backend/src/restapi/Database`
 
 
  

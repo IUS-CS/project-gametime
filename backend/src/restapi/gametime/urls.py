@@ -10,8 +10,13 @@ urlpatterns = [
     path('create-account/', views.createAccount, name='create-account'),
     path('reviews/<int:id>/', views.getReviews, name='reviews'),
     path('user/create-review/', views.createReview, name='create-review'),
-    path('user/account/favorites/', views.addFavorite),
-    path('user/account/followed-games/', views.followGame),
+    path('followers/<str:user>/', views.getFollowers),
+    path('favorites/<str:user>/', views.getFavorites),
+    path('user/account/favorites/', views.handleFavorites),
+    path('user/account/followed-games/', views.handleFollowGames),
     path('user/account/followed-users/', views.followUser),
+    path('user/account/backlog/', views.handleBacklog),
+    path('user/account/check/buttons/<int:id>/', views.checkButtons)
+
 
 ]
