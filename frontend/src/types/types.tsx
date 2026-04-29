@@ -49,6 +49,7 @@ export type userInfo = {
   email: string;
   date_joined: string;
   followers: number;
+  
 }
 
 
@@ -64,11 +65,12 @@ export type getReview = {
 };
 
 export type Review = {
-    id: number;
-    gameTitle: string;
+    gameID: number;
+    gameName: string;
     rating: number;
-    reviewText: string;
-    createdAt: string;
+    review: string;
+    formatedDate: string;
+    
 };
 
 export type postReview = {

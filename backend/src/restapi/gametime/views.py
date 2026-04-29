@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from .models import USER, REVIEWS, FAVORITES, FOLLOWGAME, FOLLOWUSER, BACKLOG
-from .serializers import reviewSerializer, gameSerializer, backlogSerializer
+from .serializers import reviewSerializer, gameSerializer, backlogSerializer, recentReviewSerializer
 
 # Create your views here.
 # get the client id from the .env file
@@ -23,6 +23,11 @@ gamefilter = [18, 19, 4, 21, 5, 41, 130, 33, 22, 24, 20, 37, 7, 8, 9, 48, 167, 3
 @api_view(['GET'])
 def healthCheck(request):
     return Response({"message": "Okay"}, status=200)
+
+@api_view(['GET'])
+def checkAuthentication(request):
+    return Response({"message": "Okay"}, status=200)
+
 
 
 # when needed to search for a specific game to review, the request will be sent here
@@ -85,17 +90,54 @@ def getAGame(request, id):
 # get account information header used to make sure they are authenicated
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def getAccountTest(request):
+def getUserAccount(request):
     # make sure the request is got
     if request.method == 'GET':
-        user = request.user         # tell django to get from user table
+        user = request.user
+        user_obj = USER.objects.filter(username=user).first()
+        count = user_obj.followers.count()
+        games = FAVORITES.objects.filter(userID=user_obj)
+        content = gameSerializer(games, many=True).data
+        reviews = REVIEWS.objects.filter(userID=user_obj).order_by('-date')[:5]
+        contentReviews = recentReviewSerializer(reviews, many=True).data
         data = {                    # data of the user int question
             'username': user.username,
             'email': user.email,
             'date_joined': user.date_joined,
+            'followers': count,
+            'reviews': contentReviews,
+            'favorites': content
         }
+
+
     # send data to front end
     return Response(data, status=200)
+
+
+@api_view(['GET'])
+def getUser(request, username):
+    # make sure the request is got
+    if request.method == 'GET':
+
+        user_obj = USER.objects.filter(username=username).first()
+        count = user_obj.followers.count()
+        games = FAVORITES.objects.filter(userID=user_obj)
+        content = gameSerializer(games, many=True).data
+        reviews = REVIEWS.objects.filter(userID=user_obj).order_by('-date')[:5]
+        contentReviews = recentReviewSerializer(reviews, many=True).data
+        data = {                    # data of the user int question
+            'username': username,
+            'email': user_obj.email,
+            'date_joined': user_obj.date_joined,
+            'followers': count,
+            'reviews': contentReviews,
+            'favorites': content
+        }
+
+
+    # send data to front end
+    return Response(data, status=200)
+
 
 
 # create an account
@@ -214,6 +256,10 @@ def handleFavorites(request):
     user = request.user
     gameID = request.data.get("gameID")
     if request.method == 'POST':
+        numberOfFavorites = FAVORITES.objects.filter(userID=user).count()
+        print(numberOfFavorites)
+        if numberOfFavorites == 9:
+            return Response({"error": "Too many favorites"})
         favorites = FAVORITES.objects.create(
             userID=user,
             gameID=gameID,

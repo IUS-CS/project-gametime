@@ -1,7 +1,6 @@
 .page {
     display: flex;
     justify-content: center;
-    align-items: center;
     padding-top: 80px;
 
     min-height: 100vh;
@@ -13,15 +12,19 @@
     align-items: flex-start;
     padding-left: 2rem;
     padding-right: 2rem;
+
 }
 
 /* Main 3 coloum layout: */
 
 .accountLayout {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    grid-template-columns: 360px 360px 360px;
+    gap: 1rem;
+    justify-content: center;
     align-items: start;
+    margin-top: 2rem;
+
 }
 
 
@@ -32,6 +35,7 @@
     padding: 22px;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.08);
+
 }
 
 .card h2 {
@@ -87,6 +91,9 @@
     padding: 22px;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.08);
+
+
+
 }
 
 .panel h3 {
@@ -100,7 +107,8 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
-    padding: auto;
+
+
 }
 
 
@@ -113,6 +121,7 @@
     text-align: center;
     font-weight: 600;
     color: #e6edf3;
+    cursor: pointer;
 }
 
 /* Scrollable review history area */
@@ -194,19 +203,30 @@
 
 
 .resultItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 0.85rem;
+    text-align: center;
+    font-weight: 600;
+    color: #e6edf3;
+    cursor: pointer;
 }
 
 .title {
-  white-space: normal;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  text-align: center;
-  max-width: 100%;
-  max-width: 250px;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    text-align: center;
+    max-width: 100%;
+    font-size: small;
+
+    height: 2.4em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* number of lines you want */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .image {

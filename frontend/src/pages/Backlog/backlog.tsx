@@ -2,13 +2,14 @@ import styles from "./backlog.module.css";
 import { useEffect, useState } from "react";
 import type { BacklogGame } from "../../types/types";
 import { getBacklog } from "../../api/endpoints";
+import { useNavigate } from "react-router-dom";
 
 
 
 
 export default function Backlog() {
 
-    
+const navigate = useNavigate();
 const [backlog, setBacklog] = useState<BacklogGame[]>([]);
 const token = localStorage.getItem("token");
 
@@ -33,7 +34,7 @@ fetchBacklog();
 
                     <div className={styles.favoriteGrid}>
                         {backlog && backlog.map((game) => (
-                            <div key={game.id} className={styles.resultItem}>
+                            <div key={game.id} onClick={() => navigate(`/game/${game.id}`)} className={styles.resultItem}>
                                 <h4 className={styles.title}>{game.name}</h4>
                                 {game.cover && (
                                     <img className={styles.image}

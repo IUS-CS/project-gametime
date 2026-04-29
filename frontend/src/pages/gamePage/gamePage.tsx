@@ -17,7 +17,6 @@ import { handleFollowGame, handleUnfollowGame, handleSubmitReview, handleAddFavo
 
 
 function GamePage() {
-    const url = 'http://127.0.0.1:8000/gametime/user/account/';
     const token = localStorage.getItem("token");
     const [game, setGame] = useState<gameObject | null>(null);
     const [reviewText, setReviewText] = useState("");
@@ -165,7 +164,7 @@ function GamePage() {
         async function fetchingData() {
             try {
 
-                const res = await Authentication(url, token || "");
+                const res = await Authentication(token || "");
 
 
 
@@ -373,10 +372,10 @@ function GamePage() {
                         ) : (
                             <div className={styles.reviewScrollArea}>
                                 {reviews.map((review) => (
-                                    <div key={review.id} className={styles.reviewItem}>
+                                    <div key={review.id}  className={styles.reviewItem}>
                                         <div className={styles.reviewHeader}>
-                                            <span className={styles.reviewUsername}>
-                                                {review.username}
+                                            <span  onClick={() => navigate(`/account/${review.username}`)} className={styles.reviewUsername}>
+                                                {review.username }
                                                 {authenticated && <button className={styles.followButton} onClick={() => handleFollowUserButton(review.username)}>{followUserButtonName[review.username] ? '✔' : '+'}</button>}
                                             </span>
                                             <span className={styles.reviewDate}>
