@@ -69,6 +69,8 @@
     text-align: center;
     font-weight: 600;
     color: #e6edf3;
+    cursor: pointer;
+
 }
 
 .reviewScrollBox {
@@ -129,6 +131,22 @@
     font-size: 0.95rem;
 }
 
+.title {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    text-align: center;
+    max-width: 100%;
+    font-size: small;
+
+    height: 2.4em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* number of lines you want */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .followButton {
     width: 100%;
     background: #1f6feb;
@@ -143,4 +161,15 @@
 
 .followButton:hover {
     background: #388bfd;
+}
+
+.image {
+    width: 100%;
+    max-width: 180px;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+
+    transition: transform 0.25s ease, filter 0.25s ease;
+    
 }

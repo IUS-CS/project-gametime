@@ -11,6 +11,7 @@ import GamePage from "./pages/gamePage/gamePage";
 import Backlog from "./pages/Backlog/backlog";
 import Recomendations from "./pages/Recomendations/recomendations";
 import Users from "./pages/Users/Users.tsx";
+import UserBacklog from "./pages/Backlog/UserBacklog.tsx";
 
 //allows navigation
 function AppContent() {
@@ -28,7 +29,6 @@ function AppContent() {
                 onAccount={() => navigate("/account")}
                 onRecomendations={() => navigate("/recomendations")}
                 onBacklogAchives={() => navigate("/backlog-achives")}
-                onUsers={() => navigate("/Users")}
             />
             
             <Routes>
@@ -40,7 +40,8 @@ function AppContent() {
                 <Route path="/account" element={<Account />} />
                 <Route path="/recomendations" element={<Recomendations />} />
                 <Route path="/backlog-achives" element={<Backlog />} />
-                <Route path="/users" element={<Users />} />
+                <Route path="/account/:username" element={<Users />} />
+                <Route path="/backlog/:username" element={<UserBacklog />} />
             </Routes>
         </>
     );

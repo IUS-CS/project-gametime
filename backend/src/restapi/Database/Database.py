@@ -8,10 +8,15 @@ import string
 import time
 from wonderwords import RandomSentence
 
-_path = "backend/src/restapi/db.sqlite3"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+_path = os.path.join(BASE_DIR, "..", "db.sqlite3")
+_path = os.path.abspath(_path)
+
+
 _database = sqlite3.connect(_path)
 _console = _database.cursor()
-jsonPath = "backend/src/restapi/Database/Data/database1.json"
+
+jsonPath = os.path.join(BASE_DIR, "Data", "database1.json")
 
 def main():
     #CreateDatabaseFile(_path, False)
@@ -34,7 +39,7 @@ def Initialize():
      #   (print("Database is NOT empty! Please delete all data to re-initialize database."))
       #  return 0
     
-    CreateTable("backlog", "userID", "gameID", "isCompleted")
+    CreateTable("backlog", "userID_id", "gameID", "isCompleted")
     CreateTable("favorites", "userID", "gameID")
     CreateTable("reviews", "userID", "gameID", "review", "rating", "date")
     CreateTable("followUser", "followed", "follower")
@@ -102,6 +107,7 @@ def PopulateDatabase(path):
             CreateReview((i*10)+l, random.randint(1,306000), r.sentence(),random.randint(1,5), time.time(), i)
         print("Populating Database: ", int(i/10), "%")
         print("\033[A\033[K", end="")
+        _database.commit()
     print("Done!")
     return 0
 
@@ -110,25 +116,25 @@ def CreateUser(id, password, username, email):
     f = False
     t = time.time()
     _console.execute(f"INSERT OR IGNORE INTO gametime_user (password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) VALUES (\"{password}\",{time.time()},{f},\"{username}\",\"{username}\",\"Smith\",\"{email}\",{f},{f},{time.time()})")
-    _database.commit()
+
     return 0
 
 def CreateBacklog(userID, gameID, isCompleted):
     global _console, _database
-    _console.execute(f"INSERT OR IGNORE INTO gametime_backlog (id,gameID,isCompleted) VALUES(\"{userID}\", \"{gameID}\", \"{isCompleted}\")")
-    _database.commit()
+    _console.execute(f"INSERT OR IGNORE INTO gametime_backlog (userID_id,gameID,isCompleted) VALUES(\"{userID}\", \"{gameID}\", \"{isCompleted}\")")
+
     return 0
 
 def CreateFavorite(userID, gameID):
     global _console, _database
     _console.execute(f"INSERT INTO gametime_favorites (gameID,userID_id) VALUES(\"{gameID}\", \"{userID}\")")
-    _database.commit()
+
     return 0
 
 def CreateReview(id, gameID, review, rating, date, userID):
     global _console, _database
     _console.execute(f"INSERT OR IGNORE INTO gametime_reviews (gameID, review, rating, date, userID_id) VALUES(\"{gameID}\",\"{review}\",\"{rating}\",\"{date}\",{userID})")
-    _database.commit()
+
     return 0
 
 def CreateDatabaseFile(name, overwriteFlag):

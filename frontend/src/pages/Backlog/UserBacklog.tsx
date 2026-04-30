@@ -1,28 +1,30 @@
 import styles from "./backlog.module.css";
 import { useEffect, useState } from "react";
 import type { BacklogGame } from "../../types/types";
-import { getBacklog } from "../../api/endpoints";
-import { useNavigate } from "react-router-dom";
+import { getUserBacklog } from "../../api/endpoints";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 
 
 export default function Backlog() {
 
-const navigate = useNavigate();
-const [backlog, setBacklog] = useState<BacklogGame[]>([]);
-const token = localStorage.getItem("token");
+    const { username } = useParams<{ username: string }>();
 
-useEffect(() => {
-async function fetchBacklog() {
-    const backlogData = await getBacklog(token || "");
-    console.log("Backlog data:", backlogData);
-    setBacklog(backlogData);
-}
+    const navigate = useNavigate();
+    const [backlog, setBacklog] = useState<BacklogGame[]>([]);
 
 
-fetchBacklog(); 
-}, []);
+    useEffect(() => {
+        async function fetchBacklog() {
+            const backlogData = await getUserBacklog(username || "");
+            setBacklog(backlogData);
+            console.log(backlogData);
+        }
+
+
+        fetchBacklog();
+    }, []);
 
 
 
