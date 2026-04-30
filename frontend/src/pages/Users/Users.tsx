@@ -1,92 +1,56 @@
+import { useNavigate, useParams } from "react-router";
+import { getUserAccount } from "../../api/endpoints";
 import styles from "./Users.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import type { FavoriteGame, Review, userInfo } from "../../types/types";
 
-type Review = {
-    id: number;
-    gameTitle: string;
-    rating: number;
-    reviewText: string;
-    createdAt: string;
-};
 
-type FavoriteGame = {
-    id: number;
-    title: string;
-};
-
-type PublicUser = {
-    username: string;
-    dateJoined: string;
-    followers: number;
-    favoriteGames: FavoriteGame[];
-    recentReviews: Review[];
-};
 
 export default function Users() {
+    const navigate = useNavigate();
 
-    // Dummy user !!CHANGE THIS IN BACKEND
-    const [user] = useState<PublicUser>({
-        username: "AMOGUSFAN",
-        dateJoined: "2026-04-06T22:09:12.797257Z",
-        followers: 12,
+    const { username } = useParams<{ username: string }>();
+    
+    const [data, setData] = useState<userInfo | null>(null);
+    
+    
+    const [favorites, setFavorites] = useState<FavoriteGame[]>([]);
 
-        favoriteGames: [
-            { id: 1, title: "Resident Evil 4" },
-            { id: 2, title: "Resident Evil 7" },
-            { id: 3, title: "Resident Evil 3" },
-            { id: 4, title: "Resident Evil Remake" },
-        ],
+    const [recentReviews, setRecentReviews] = useState<Review[]>([]);
 
-        recentReviews: [
-            {
-                id: 1,
-                gameTitle: "blah",
-                rating: 5,
-                reviewText: "blah blah blah.",
-                createdAt: "2026-04-05",
-            },
-            {
-                id: 2,
-                gameTitle: "blah",
-                rating: 3.5,
-                reviewText: "blah blah blah",
-                createdAt: "2026-04-04",
-            },
-            {
-                id: 3,
-                gameTitle: "blah",
-                rating: 4.5,
-                reviewText: "blah.",
-                createdAt: "2026-04-03",
-            },
-            {
-                id: 4,
-                gameTitle: "blah",
-                rating: 5,
-                reviewText: "blahblahblahblahblah.",
-                createdAt: "2026-04-02",
-            },
-            {
-                id: 5,
-                gameTitle: "Tblah",
-                rating: 4,
-                reviewText: "blahblahblahblahblahblahblahblahblahblahblahblahblahblahblah",
-                createdAt: "2026-04-01",
-            },
-        ],
-    });
+    
 
+    
+    
     const [isFollowing, setIsFollowing] = useState(false);
+    useEffect(() => {
+        
+        async function renderPage() {
+            try {
+            const data = await getUserAccount(username || "");
+            setData(data);
 
-    // Format backend ISO datetime into a readable date
-    const formattedJoinDate = new Date(user.dateJoined).toLocaleDateString(
-        "en-US",
-        {
+            setFavorites(data.favorites);
+            setRecentReviews(data.reviews);
+            
+
+            } catch (err) {
+                console.error("Error loading user account:", err);
+            }
+        }
+        renderPage();
+    }, [isFollowing]);
+
+
+
+  const formattedJoinDate = data?.date_joined
+        ? new Date(data.date_joined).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",
-        }
-    );
+        })
+        : "N/A";
+
 
     const renderStars = (rating: number) => {
         const fullStars = Math.floor(rating);
@@ -111,9 +75,9 @@ export default function Users() {
                     <h2>User Profile</h2>
 
                     <div className={styles.infoGroup}>
-                        <p><strong>Username:</strong> {user.username}</p>
+                        <p><strong>Username:</strong> {data?.username}</p>
                         <p><strong>Date Joined:</strong> {formattedJoinDate}</p>
-                        <p><strong>Followers:</strong> {user.followers}</p>
+                        <p><strong>Followers:</strong> {data?.followers}</p>
                     </div>
 
                     <button
@@ -122,6 +86,13 @@ export default function Users() {
                     >
                         {isFollowing ? "Following" : "Follow"}
                     </button>
+
+                    <button
+                        className={styles.followButton}
+                        onClick={() => navigate(`/backlog/${data?.username}`)}
+                    >
+                        Go to {data?.username}'s Backlog
+                    </button>
                 </div>
 
                 {/* Favorite Games */}
@@ -129,9 +100,16 @@ export default function Users() {
                     <h3>Favorite Games</h3>
 
                     <div className={styles.favoriteGrid}>
-                        {user.favoriteGames.map((game) => (
-                            <div key={game.id} className={styles.favoriteItem}>
-                                {game.title}
+                        {favorites && favorites.map((game) => (
+                            <div key={game.id} onClick={() => navigate(`/game/${game.id}`)} className={styles.favoriteItem}>
+                              <h4 className={styles.title}>{game.name}</h4>
+                            
+                                {game.cover && (
+                                    <img className={styles.image}
+                                        src={`https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`}
+                                        alt={`${game.name} cover`}
+                                    />
+                                )}
                             </div>
                         ))}
                     </div>
@@ -142,16 +120,16 @@ export default function Users() {
                     <h3>Last 5 Reviews</h3>
 
                     <div className={styles.reviewScrollBox}>
-                        {user.recentReviews.map((review) => (
-                            <div key={review.id} className={styles.reviewItem}>
+                        {recentReviews && recentReviews.map((review) => (
+                            <div key={review.gameID} className={styles.reviewItem}>
 
                                 <div className={styles.reviewHeader}>
                                     <span className={styles.reviewGameTitle}>
-                                        {review.gameTitle}
+                                        {review.gameName}
                                     </span>
 
                                     <span className={styles.reviewDate}>
-                                        {review.createdAt}
+                                        {review.formatedDate}
                                     </span>
                                 </div>
 
@@ -163,7 +141,7 @@ export default function Users() {
                                 </div>
 
                                 <p className={styles.reviewText}>
-                                    {review.reviewText}
+                                    {review.review}
                                 </p>
 
                             </div>

@@ -1,3 +1,4 @@
+import type { Review } from "../types/types";
 
 export default async function getGame(id: string) {
     try {
@@ -13,6 +14,104 @@ export default async function getGame(id: string) {
         throw err;
     }
 }
+
+
+
+
+export const getAccountInfo = async (token: string) => {
+    try {
+        
+        const res = await fetch(`http://127.0.0.1:8000/gametime/user/account/`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Token ${token}`,
+            },
+        });
+        if (!res.ok) {
+            return res;
+        }
+        const data = await res.json();
+        const favorites = data.favorites.map((item: { gameID: number }) => item.gameID).join(", ");
+        console.log("Favorite game IDs:", favorites);
+        if (favorites.length > 0) {
+            const gameData = await getGame(favorites);
+            data.favorites = gameData;
+        }
+
+        type Game = {
+            id: number;
+            name: string;
+        };
+
+        let reviewGameData:Game[] = [];
+
+        const reviews = data.reviews.map((item: { gameID: number }) => item.gameID).join(", ");
+        if (reviews.length > 0) {
+            reviewGameData = await getGame(reviews);
+        }
+
+        const game = new Map(reviewGameData.map((g: { id: number, name: string }) => [g.id, g]));
+
+        data.reviews = data.reviews.map((review: Review) => ({
+            ...review,
+            gameName: game.get(review.gameID)?.name ?? "Unknown Game",
+        }));
+        console.log("Account info with reviews:", data);
+        return data;
+
+    }
+    catch (err) {
+        console.error("Error fetching account info:", err);
+        throw err;
+    }
+}
+
+export const getUserAccount = async (username: string) => {
+    try {
+      
+        const res = await fetch(`http://127.0.0.1:8000/gametime/account/${username}/`, {
+            method: 'GET',
+            
+        });
+        if (!res.ok) {
+            return res;
+        }
+        const data = await res.json();
+        const favorites = data.favorites.map((item: { gameID: number }) => item.gameID).join(", ");
+        console.log("Favorite game IDs:", favorites);
+        if (favorites.length > 0) {
+            const gameData = await getGame(favorites);
+            data.favorites = gameData;
+        }
+
+        type Game = {
+            id: number;
+            name: string;
+        };
+
+        let reviewGameData:Game[] = [];
+
+        const reviews = data.reviews.map((item: { gameID: number }) => item.gameID).join(", ");
+        if (reviews.length > 0) {
+            reviewGameData = await getGame(reviews);
+        }
+
+        const game = new Map(reviewGameData.map((g: { id: number, name: string }) => [g.id, g]));
+
+        data.reviews = data.reviews.map((review: Review) => ({
+            ...review,
+            gameName: game.get(review.gameID)?.name ?? "Unknown Game",
+        }));
+        console.log("Account info with reviews:", data);
+        return data;
+
+    }
+    catch (err) {
+        console.error("Error fetching account info:", err);
+        throw err;
+    }
+}
+
 
 
 
@@ -138,28 +237,7 @@ export const handleUnfollowGame = (id: string, token: string) => {
 
 
 
-export const getFavorites = async (username: string) => {
-    try {
-        const res = await fetch(`http://127.0.0.1:8000/gametime/favorites/${username}/`, {
-            method: 'GET',
-        });
-        if (!res.ok) {
-            throw new Error("Failed to fetch favorites");
-        }
-        const data = await res.json();
 
-        const favorites = data.map((item: { gameID: number }) => item.gameID).join(", ");
-        if (favorites.length === 0) {
-            return [];
-        }
-        const gameData = await getGame(favorites);
-        return gameData; // Assuming the response is an array of followed users
-    }
-    catch (err) {
-        console.error("Error fetching favorites:", err);
-        throw err;
-    }
-}
 
 export const handleAddFavoriteGame = (id: string, token: string) => {
     try {
@@ -279,22 +357,6 @@ export const handleUnfollowUser = (username: string, token: string) => {
     }
 }
 
-export const getFollowers = async (username: string) => {
-    try {
-        const res = await fetch(`http://127.0.0.1:8000/gametime/followers/${username}/`, { method: 'GET' });
-        if (!res.ok) {
-            throw new Error("Failed to fetch followers");
-        }
-        const data = await res.json();
-        return data // Assuming the response is an array of followed users
-
-    }
-    catch (err) {
-        console.error("Error fetching followers:", err);
-        throw err;
-    }
-
-}
 
 
 
@@ -344,7 +406,17 @@ export const getBacklog = async (token: string) => {
             return [];
         }
         const backlogData = await getGame(Backlog);
-        return backlogData;
+         const results = backlogData.map((game: any) => {
+            // Find the matching entry in our original 'data' array
+            const originalRecord = data.find((item: any) => item.gameID === game.id);
+
+            return {
+                ...game,
+                // Add the boolean field, defaulting to false if not found
+                isCompleted: originalRecord ? originalRecord.isCompleted : false
+            };
+        });
+        return results;
     }
     catch (err) {
         console.error("Error fetching backlog games:", err);
@@ -352,9 +424,41 @@ export const getBacklog = async (token: string) => {
     }
 };
 
+export const getUserBacklog = async (username: string) => {
+    try {
+        const res = await fetch(`http://127.0.0.1:8000/gametime/backlog/${username}/`);
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch user backlog");
+        }
+        const data = await res.json();
+        console.log("Raw backlog data:", data);
+        const Backlog = data.map((item: { gameID: number }) => item.gameID).join(", ");
+        if (Backlog.length === 0) {
+            return [];
+        }
+        const backlogData = await getGame(Backlog);
+
+        const results = backlogData.map((game: any) => {
+            // Find the matching entry in our original 'data' array
+            const originalRecord = data.find((item: any) => item.gameID === game.id);
+
+            return {
+                ...game,
+                // Add the boolean field, defaulting to false if not found
+                isCompleted: originalRecord ? originalRecord.isCompleted : false
+            };
+        });
+        return results;
+    }
+    catch (err) {
+        console.error("Error fetching user backlog:", err);
+        throw err;
+    }
+};
 
 export const checkButtons = async (id: string, token: string) => {
-    try {   
+    try {
         const res = await fetch(`http://127.0.0.1:8000/gametime/user/account/check/buttons/${id}/`, {
             method: 'GET',
             headers: {

@@ -1,87 +1,49 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./Account.module.css";
 import { useEffect, useState } from "react";
-import Authentication from "../../auth/endpoints";
 import type { userInfo } from "../../types/types";
-import { getFavorites, getFollowers } from "../../api/endpoints";
 import type {FavoriteGame, Review} from "../../types/types";
+import {getAccountInfo} from "../../api/endpoints";
 
 
 
 export default function Account() {
     const navigate = useNavigate();
-    const url = "http://127.0.0.1:8000/gametime/user/account/";
-
+    
     // Stores user account data returned from backend
     const [data, setData] = useState<userInfo | null>(null);
-
     // Pull auth token from localStorage for authenticated account requests
     const token = localStorage.getItem("token");
-
-
     const [followers, setFollowers] = useState<number>(0);
     const [favorites, setFavorites] = useState<FavoriteGame[]>([]);
 
     // CHANGE THIS!!!! Dummy review data for layout/testing until backend
-    const [recentReviews] = useState<Review[]>([
-        {
-            id: 1,
-            gameTitle: "blah",
-            rating: 5,
-            reviewText: "blah blah blah.",
-            createdAt: "2026-04-05",
-        },
-        {
-            id: 2,
-            gameTitle: "blah",
-            rating: 3.5,
-            reviewText: "blah blah blah",
-            createdAt: "2026-04-04",
-        },
-        {
-            id: 3,
-            gameTitle: "blah",
-            rating: 4.5,
-            reviewText: "blah.",
-            createdAt: "2026-04-03",
-        },
-        {
-            id: 4,
-            gameTitle: "blah",
-            rating: 5,
-            reviewText: "blahblahblahblahblah.",
-            createdAt: "2026-04-02",
-        },
-        {
-            id: 5,
-            gameTitle: "Tblah",
-            rating: 4,
-            reviewText: "blahblahblahblahblahblahblahblahblahblahblahblahblahblahblah",
-            createdAt: "2026-04-01",
-        },
-    ]);
+    const [recentReviews, setRecentReviews] = useState<Review[]>([]);
+       
 
 
     useEffect(() => {
         async function loadAccount() {
             try {
                 // Authentication helper makes the authenticated request
-                const res = await Authentication(url, token || "");
-                const followers = await getFollowers( localStorage.getItem("username") || "");
-                setFollowers(followers.followers);
-                console.log("Followers count:", followers);
-                const favorites = await getFavorites(localStorage.getItem("username") || "");
-                setFavorites(favorites);
-                
+                const res = await getAccountInfo(token || "");
 
                 // If token is invalid or expired, redirect to sign-in
                 if (res?.status === 401) {
                     navigate("/sign-in");
                     return;
                 }
+                
+                setFollowers(res.followers);
+                
+                setFavorites(res.favorites);
 
-                const data = await res.json();
-                setData(data);
+                setRecentReviews(res.reviews);
+                
+
+                // If token is invalid or expired, redirect to sign-in
+                
+                setData(res);
             } catch (err) {
                 console.error("Account page error:", err);
 
@@ -170,7 +132,7 @@ export default function Account() {
 
                     <div className={styles.favoriteGrid}>
                         {favorites && favorites.map((game) => (
-                            <div key={game.id} className={styles.resultItem}>
+                            <div key={game.id} onClick={() => navigate(`/game/${game.id}`)} className={styles.resultItem}>
                                 <h4 className={styles.title}>{game.name}</h4>
                                 {game.cover && (
                                     <img className={styles.image}
@@ -190,13 +152,13 @@ export default function Account() {
 
                     <div className={styles.reviewScrollBox}>
                         {recentReviews.map((review) => (
-                            <div key={review.id} className={styles.reviewItem}>
+                            <div key={review.gameID} className={styles.reviewItem}>
                                 <div className={styles.reviewHeader}>
                                     <span className={styles.reviewGameTitle}>
-                                        {review.gameTitle}
+                                        {review.gameName}
                                     </span>
                                     <span className={styles.reviewDate}>
-                                        {review.createdAt}
+                                        {review.formatedDate}
                                     </span>
                                 </div>
 
@@ -208,7 +170,7 @@ export default function Account() {
                                 </div>
 
                                 <p className={styles.reviewText}>
-                                    {review.reviewText}
+                                    {review.review}
                                 </p>
                             </div>
                         ))}

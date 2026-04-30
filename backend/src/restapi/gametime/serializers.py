@@ -15,6 +15,18 @@ class reviewSerializer(serializers.ModelSerializer):
         fields = ['username', 'review', 'rating', 'formatedDate']
 
 
+class recentReviewSerializer(serializers.ModelSerializer):
+    formatedDate = serializers.DateTimeField(
+        source='date',
+        format='%m/%d/%Y',
+        read_only=True
+
+    )
+    class Meta:
+        model = REVIEWS
+        fields = ['gameID', 'review', 'rating', 'formatedDate']
+
+
 class gameSerializer(serializers.ModelSerializer):
     class Meta:
         model = FAVORITES
@@ -25,6 +37,6 @@ class gameSerializer(serializers.ModelSerializer):
 class backlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = BACKLOG
-        fields = ['gameID']
+        fields = ['gameID', 'isCompleted']
 
 
