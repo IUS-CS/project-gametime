@@ -27,7 +27,11 @@ http://localhost:8000/gametime/games
 ```
 
 
-## setting up dependencies 
+## Navigating the frontend
+From the homepage, you can get started by creating an account in the top left, or begin searching for reviews of your favorite games! Each game has a separate page with descriptions, ratings, and more. To leave a review, simply search the desired game title, and fill out the prompt on the right. You can also visit your unique profile page to view your own reviews, your favorite games, and who you follow on the website.
+
+
+## Setting up dependencies 
 If you want to contribute then run this in the backend directory:
 ```
 pip install --no-cache-dir -r requirements.txt
@@ -39,8 +43,8 @@ And this in the frontend directory:
 npm install
 ```
 
-## populating database
+## Populating database
 For testing purposes, you can populate the database with randomly generated data by running `Database.py` in `backend/src/restapi/Database`
 
 
- 
+
