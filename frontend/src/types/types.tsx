@@ -92,5 +92,6 @@ export type BacklogGame = {
     cover?: {
         image_id: string;
     };
+    isCompleted: boolean;
 };
 

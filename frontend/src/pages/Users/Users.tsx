@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { getUserAccount } from "../../api/endpoints";
 import styles from "./Users.module.css";
 import { useState, useEffect } from "react";
@@ -7,14 +7,18 @@ import type { FavoriteGame, Review, userInfo } from "../../types/types";
 
 
 export default function Users() {
+    const navigate = useNavigate();
+
     const { username } = useParams<{ username: string }>();
-    const token = localStorage.getItem("token");
+    
     const [data, setData] = useState<userInfo | null>(null);
     
-    const [followers, setFollowers] = useState<number>(0);
+    
     const [favorites, setFavorites] = useState<FavoriteGame[]>([]);
 
     const [recentReviews, setRecentReviews] = useState<Review[]>([]);
+
+    
 
     
     
@@ -28,7 +32,7 @@ export default function Users() {
 
             setFavorites(data.favorites);
             setRecentReviews(data.reviews);
-            setFollowers(data.followers);
+            
 
             } catch (err) {
                 console.error("Error loading user account:", err);
@@ -37,7 +41,16 @@ export default function Users() {
         renderPage();
     }, [isFollowing]);
 
-  
+
+
+  const formattedJoinDate = data?.date_joined
+        ? new Date(data.date_joined).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        })
+        : "N/A";
+
 
     const renderStars = (rating: number) => {
         const fullStars = Math.floor(rating);
@@ -63,7 +76,7 @@ export default function Users() {
 
                     <div className={styles.infoGroup}>
                         <p><strong>Username:</strong> {data?.username}</p>
-                        <p><strong>Date Joined:</strong> {data?.date_joined}</p>
+                        <p><strong>Date Joined:</strong> {formattedJoinDate}</p>
                         <p><strong>Followers:</strong> {data?.followers}</p>
                     </div>
 
@@ -73,6 +86,13 @@ export default function Users() {
                     >
                         {isFollowing ? "Following" : "Follow"}
                     </button>
+
+                    <button
+                        className={styles.followButton}
+                        onClick={() => navigate(`/backlog/${data?.username}`)}
+                    >
+                        Go to {data?.username}'s Backlog
+                    </button>
                 </div>
 
                 {/* Favorite Games */}
@@ -81,9 +101,9 @@ export default function Users() {
 
                     <div className={styles.favoriteGrid}>
                         {favorites && favorites.map((game) => (
-                            <div key={game.id} className={styles.favoriteItem}>
-                                {game.name}
-
+                            <div key={game.id} onClick={() => navigate(`/game/${game.id}`)} className={styles.favoriteItem}>
+                              <h4 className={styles.title}>{game.name}</h4>
+                            
                                 {game.cover && (
                                     <img className={styles.image}
                                         src={`https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`}

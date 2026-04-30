@@ -9,6 +9,7 @@ urlpatterns = [
     path('reviews/<int:id>/', views.getReviews, name='reviews'),
     path('sign-in/', views.signIn, name='sign-in'),
     path('account/<str:username>/', views.getUser),
+    path('backlog/<str:username>/', views.getUserBacklog),
     path('user/account/', views.getUserAccount, name='account-test'),
     path('user/auth/', views.checkAuthentication, name='auth'),
     path('user/create-review/', views.createReview, name='create-review'),

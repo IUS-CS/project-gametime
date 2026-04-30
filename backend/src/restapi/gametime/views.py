@@ -338,6 +338,15 @@ def handleBacklog(request):
     return Response({"Couldn't backlog item"})
 
 
+@api_view(['GET'])
+def getUserBacklog(request, username):
+    if request.method == 'GET':
+        userObj = USER.objects.filter(username=username).first()
+        backlogs = BACKLOG.objects.filter(userID=userObj)
+        content = backlogSerializer(backlogs, many=True).data
+        return Response(content, status=200)
+
+
 @api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def followUser(request):

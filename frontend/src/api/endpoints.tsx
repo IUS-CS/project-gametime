@@ -406,7 +406,17 @@ export const getBacklog = async (token: string) => {
             return [];
         }
         const backlogData = await getGame(Backlog);
-        return backlogData;
+         const results = backlogData.map((game: any) => {
+            // Find the matching entry in our original 'data' array
+            const originalRecord = data.find((item: any) => item.gameID === game.id);
+
+            return {
+                ...game,
+                // Add the boolean field, defaulting to false if not found
+                isCompleted: originalRecord ? originalRecord.isCompleted : false
+            };
+        });
+        return results;
     }
     catch (err) {
         console.error("Error fetching backlog games:", err);
@@ -414,6 +424,38 @@ export const getBacklog = async (token: string) => {
     }
 };
 
+export const getUserBacklog = async (username: string) => {
+    try {
+        const res = await fetch(`http://127.0.0.1:8000/gametime/backlog/${username}/`);
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch user backlog");
+        }
+        const data = await res.json();
+        console.log("Raw backlog data:", data);
+        const Backlog = data.map((item: { gameID: number }) => item.gameID).join(", ");
+        if (Backlog.length === 0) {
+            return [];
+        }
+        const backlogData = await getGame(Backlog);
+
+        const results = backlogData.map((game: any) => {
+            // Find the matching entry in our original 'data' array
+            const originalRecord = data.find((item: any) => item.gameID === game.id);
+
+            return {
+                ...game,
+                // Add the boolean field, defaulting to false if not found
+                isCompleted: originalRecord ? originalRecord.isCompleted : false
+            };
+        });
+        return results;
+    }
+    catch (err) {
+        console.error("Error fetching user backlog:", err);
+        throw err;
+    }
+};
 
 export const checkButtons = async (id: string, token: string) => {
     try {

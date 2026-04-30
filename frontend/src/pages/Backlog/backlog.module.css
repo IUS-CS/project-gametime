@@ -1,8 +1,10 @@
 .page {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding-top: 80px;
+    gap: 2rem;
 
     min-height: 100vh;
     background: linear-gradient(to bottom, #2b2e33, #1f2227);

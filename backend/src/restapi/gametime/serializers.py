@@ -37,6 +37,6 @@ class gameSerializer(serializers.ModelSerializer):
 class backlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = BACKLOG
-        fields = ['gameID']
+        fields = ['gameID', 'isCompleted']
 
 
